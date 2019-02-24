@@ -282,6 +282,7 @@ int main(int argc, char* argv[]){
 	test4Expected.push_back(v); 
 	v.clear(); 
 
+	/*
 	vector<double> test4Scalars{4.31,0,1.5, -5.6, 10000,5.5, -3.14, 100, 17.5}; 
 	UnitTest test4(idIndex++, speak); 
 	if(speak)test4.setResults(testPrompt); 
@@ -289,20 +290,78 @@ int main(int argc, char* argv[]){
 	test4.setArguments(test1Arguments); 
 	test4.setScalars(test4Scalars); 
 	test4.setExpected(test4Expected); 
-	test4.runAllTests(); 
+	test4.runAllTests();  */ 
 
 	testPrompt.clear(); 
 	testPrompt = {
-	"",
-	"",
-	"",
-	"", 
-	"", 
-	"",
-	"",
-	""
+	"Test of multiplying 3x3 int matrices with single value elements returned:     ",
+	"Test of multiplying 3x3 int matrices with various value elements returned:    ",
+	"Test of multiplying square int matrix with itself returned:                   ",
+	"Test of multiplying 5x2 matrix with a 2x2 matrix returned:                    ", 
+	"Test of multiplying int matrix with a single-entry double matrix returned:    ", 
+	"Test of multiplying non-square matrices after transposition returned:         ",
+	"Test of multiplying double and int matrices after transposition returned:     ",
+	"Test of multiplying 2x5 with 2x5 post transposition returned:                 ",
+	"Test above post transposition with matrices reversed returned:                ",
+	"Test of multiplying 3x3 with matrix transposed into a vector returned:        "
 	};
-	vector<vector<double>> test5Expected = test4Expected; 
+	vector<vector<double>> test5Expected;// = test4Expected; 
+	v.clear(); 
+	v={
+	-6,-6,-6,
+	-6,-6,-6,
+	-6,-6,-6
+	}; 
+	test5Expected.push_back(v); v.clear(); 
+	v={
+	150,190,225,
+	210,266,315,
+	150,190,225
+	};
+	test5Expected.push_back(v); v.clear(); 
+	v={
+	1665,2017,2325,
+	3735,4639,5430,
+	5805,7261,8535,
+	};
+	test5Expected.push_back(v); v.clear(); 
+	v={
+	-1325391862,32709,
+	-1325391862,32709,
+	-1325391862,32709,
+	-1325391862,32709,
+	1884160010,-451458129
+	};
+	test5Expected.push_back(v); v.clear(); 
+	v={
+		40000,0,
+		40000,0,
+		25000,0,
+		20000,0,
+		20000,0,
+	};
+	test5Expected.push_back(v); v.clear();
+	v = {4,4,4,4}; 
+	test5Expected.push_back(v); v.clear(); 
+	v = {
+	0,0,0,0,0,
+	10,0,0,0,0
+	}; 
+	test5Expected.push_back(v); v.clear(); 
+	v = { 4.56,4.56,4.56,4.56};
+	test5Expected.push_back(v); v.clear(); 
+	v = {
+	-5000,-5000,2500,-2500,-2500,
+	-175207728,-175207728,-2059924784,2059879784,2059879784
+	};
+	test5Expected.push_back(v); v.clear(); 
+	v = {
+	74,189,304,
+	102,263,424,
+	74,189,304
+	};
+	test5Expected.push_back(v); v.clear(); 
+
 
 	testOperations = "matrixMult"; 
 	UnitTest test5(idIndex++, speak); 
@@ -311,6 +370,12 @@ int main(int argc, char* argv[]){
 	test5.setArguments(test1Arguments); 
 	test5.setExpected(test5Expected); 
 	test5.runAllTests(); 
+
+	/*Matrix<3,3,int> i1(1); 
+	Matrix<3,3,int> i2(-2); 
+	Matrix<3,3,int> p1(0);
+	p1.multiply(i1,i2); 
+	p1.toString(cout); */ 
 
 	cout<<"Exiting Matrix Client"<<endl; 
 	return 0; 

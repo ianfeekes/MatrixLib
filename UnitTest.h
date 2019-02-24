@@ -98,6 +98,7 @@ void UnitTest::runAllTests()
     size_t argI=0;                             //Index for the argument vector for initialization
     //Create various matrices for testing  
     string operation = this->operation;
+    //Templatized matrices must be initialized explicitly with literals in template 
     Matrix<3,3,int> m1(this->arguments[argI++]); 
     Matrix<2,2,int> m2(this->arguments[argI++]); 
     Matrix<2,10,float> m3(this->arguments[argI++]);  
@@ -188,7 +189,7 @@ void UnitTest::runAllTests()
     }
     else if(operation.compare("scalarMult")==0)
     {
-        results.push_back(m1*this->scalars[index]==this->expected[index]);index++;
+       /* results.push_back(m1*this->scalars[index]==this->expected[index]);index++;
         results.push_back(m2*this->scalars[index]==this->expected[index]);index++; 
         results.push_back(m3*this->scalars[index]==this->expected[index]);index++; 
         results.push_back(m4*this->scalars[index]==this->expected[index]);index++;
@@ -197,15 +198,74 @@ void UnitTest::runAllTests()
         results.push_back(m6*this->scalars[index]==this->expected[index]);index++; 
         results.push_back(m7*this->scalars[index]==this->expected[index]);index++; 
         index++; 
-        results.push_back(m9*this->scalars[index]==this->expected[index]);
+        results.push_back(m9*this->scalars[index]==this->expected[index]);*/
     }
     else if(operation.compare("matrixMult")==0)
     {
-        Matrix<3,3,int>;    //m1*m4
-        Matrix<2,5,int>        //m9*m2
-        Matrix<2,5,int>        //m6*m2       
-                                //m5*m8
-                                //m8*m5   
+        Matrix<3,3,int> i1(1); 
+	    Matrix<3,3,int> i2(-2); 
+	    Matrix<3,3,int> p1(0);
+        p1.multiply(i1,i2);
+	    results.push_back(p1==this->expected[index++]); 
+        
+        Matrix<3,3,int> p2(0); 
+        p2.multiply(m1,m4); 
+        //p2.toString(cout); 
+        results.push_back(p2==this->expected[index++]); 
+
+        Matrix<3,3,int> p3(0); 
+        p3.multiply(m4,m4); 
+        //p3.toString(cout); 
+        results.push_back(p3==this->expected[index++]); 
+
+        Matrix<5,2,int> p4(0); 
+        p4.multiply(m9,m2); 
+        //p4.toString(cout); 
+        results.push_back(p4==this->expected[index++]); 
+
+        Matrix<5,2,int> p5(0); 
+        p5.multiply(m6,m2); 
+        //p5.toString(cout); 
+        results.push_back(p5==this->expected[index++]); 
+
+        Matrix<4,1,int> p6(0); 
+        p6.multiply(m5,m8); 
+        //p6.toString(cout); 
+        results.push_back(p6==this->expected[index++]); 
+
+     /*   Matrix<3,3,int> p7(0); 
+        p7.multiply(m5, m9.createTranspose()); 
+        p7.toString(cout); */ 
+
+        Matrix<2,5,int> p8(0);
+        p8.multiply(m2,m9.createTranspose()); 
+        //p8.toString(cout); 
+        results.push_back(p8==this->expected[index++]); 
+
+        Matrix<1,4,double> p9(0); 
+        p9.multiply(m8,m5.createTranspose()); 
+        //p9.toString(cout); 
+        results.push_back(p9==this->expected[index++]); 
+
+        Matrix<2,5,int> p10(0);
+        p10.multiply(m2,m6.createTranspose()); 
+        //p10.toString(cout); 
+        results.push_back(p10==this->expected[index++]); 
+
+        Matrix<3,3,int> p11(0);
+        p11.multiply(m1,m4.createTranspose());
+        //p11.toString(cout); 
+        results.push_back(p11==this->expected[index++]); 
+     /* Matrix<3,3,int> p1 = m4*m1; 
+      Matrix<3,3,int> p2 = m4*m4; 
+      Matrix<2,5,int> p3 = m9*m2;
+      Matrix<2,5,int> p4 = m6*m2; 
+      Matrix<1,1,int> p5 = m5*m8; 
+      Matrix<3,3,int> p6 = m5*(m1.createTranspose()); 
+      Matrix<2,5,int> p7 = m2*(m9.createTranspose()); 
+      Matrix<1,1,double> p8 = m8*(m5.createTranspose()); 
+      Matrix<2,5,int> p9 = m2*(m6.createTranspose()); 
+      Matrix<3,3,int> p10 = m1*(m4.createTranspose()); */ 
     }
 
     if(this->talk)

@@ -120,10 +120,10 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		Matrix<M,P,T> operator*(const Matrix<N,P,U>& multiplyMatrix) const; 
 
 		//Scalar multiplication implementation is trivial but necessary for user possibilities 
-		inline Matrix<M,N,T> operator*(const T val){for(size_t i=0;i<M;++i)for(size_t j=0;j<N;++j)this->arr[i][j]*=val;return *this;}
+		Matrix<M,N,T> operator*(const T val);//{for(size_t i=0;i<M;++i)for(size_t j=0;j<N;++j)this->arr[i][j]*=val;return *this;}
 
 		template<typename U> 
-		inline Matrix<M,N,T> operator*(const U val){for(size_t i=0;i<M;++i)for(size_t j=0;j<N;++j)this->arr[i][j]*=static_cast<T>(val);return *this;}
+		Matrix<M,N,T> operator*(const U val);//{for(size_t i=0;i<M;++i)for(size_t j=0;j<N;++j)this->arr[i][j]*=static_cast<T>(val);return *this;}
 
 		//*= scalar functionality 
 		inline void operator*=(const T val){for(size_t i=0;i<M;++i)for(size_t j=0;j<N;j++)this->arr[i][j]*=val;}
@@ -303,11 +303,11 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 				
 				//T& currEntry = this->arr[i][j]; 
 				
-				T& currEntry = static_cast<T>(0.0); 
+				T currEntry = 0;//static_cast<T>(0.0); 
 				for(size_t k=0;k<P;++k)
 				{
-					while(m1.arr[i][k]==0)k++;
-					while(m2.arr[k][j]==0)j++; 
+					while(m1.arr[i][k]==0 && k<P)k++;
+					while(m2.arr[k][j]==0 && j<N)j++; 
 					currEntry+=m1.arr[i][k]*m2.arr[k][j]; 
 				}
 				this->arr[i][j]=currEntry; 
@@ -328,7 +328,7 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 				
 				//T& currEntry = this->arr[i][j]; 
 				
-				T& currEntry = static_cast<T>(0.0); 
+				T currEntry = 0;//static_cast<T>(0.0); 
 				for(size_t k=0;k<P;++k)
 				{
 					while(m1.arr[i][k]==0)k++;
@@ -356,6 +356,24 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		productMatrix.multiply(*this,multiplyMatrix);  
 		return productMatrix; 
 	}
+
+	//Scalar multiplication implementation is trivial but necessary for user possibilities 
+/*	template<size_t M, size_t N, typename T> 
+	Matrix<M,N,T> Matrix<M,N,T>:: operator*(const T val)
+	{
+		for(size_t i=0;i<M;++i)
+			for(size_t j=0;j<N;++j)this->arr[i][j]*=val;
+		return *this;
+	}
+
+	template<size_t M, size_t N, typename T> 
+	template<typename U> 
+	Matrix<M,N,T> Matrix<M,N,T>:: operator*(const U val)
+	{
+		for(size_t i=0;i<M;++i)
+			for(size_t j=0;j<N;++j)this->arr[i][j]*=static_cast<T>(val);
+		return *this;
+	} */ 
 
 	/*Sets the data fields in the new Transpose matrix to the transpose of the matrix calling 
 	 *the function. 
