@@ -189,16 +189,16 @@ void UnitTest::runAllTests()
     }
     else if(operation.compare("scalarMult")==0)
     {
-       /* results.push_back(m1*this->scalars[index]==this->expected[index]);index++;
-        results.push_back(m2*this->scalars[index]==this->expected[index]);index++; 
-        results.push_back(m3*this->scalars[index]==this->expected[index]);index++; 
-        results.push_back(m4*this->scalars[index]==this->expected[index]);index++;
-        results.push_back(m5*this->scalars[index]==this->expected[index]);index++; 
+        results.push_back(m1.scalarMult(this->scalars[index])==this->expected[index]);index++;
+        results.push_back(m2.scalarMult(this->scalars[index])==this->expected[index]);index++; 
+        results.push_back(m3.scalarMult(this->scalars[index])==this->expected[index]);index++; 
+        results.push_back(m4.scalarMult(this->scalars[index])==this->expected[index]);index++;
+        results.push_back(m5.scalarMult(this->scalars[index])==this->expected[index]);index++; 
          //(m6*this->scalars[index]).toString(cout); 
-        results.push_back(m6*this->scalars[index]==this->expected[index]);index++; 
-        results.push_back(m7*this->scalars[index]==this->expected[index]);index++; 
+        results.push_back(m6.scalarMult(this->scalars[index])==this->expected[index]);index++; 
+        results.push_back(m7.scalarMult(this->scalars[index])==this->expected[index]);index++; 
         index++; 
-        results.push_back(m9*this->scalars[index]==this->expected[index]);*/
+        results.push_back(m9.scalarMult(this->scalars[index])==this->expected[index]);
     }
     else if(operation.compare("matrixMult")==0)
     {
@@ -220,12 +220,23 @@ void UnitTest::runAllTests()
 
         Matrix<5,2,int> p4(0); 
         p4.multiply(m9,m2); 
-        //p4.toString(cout); 
+       /* m9.toString(cout); 
+        m2.toString(cout);cout<<endl; 
+        p4.toString(cout); 
+        for(size_t j=0;j<this->expected[index].size();++j)cout<<this->expected[index][j]<<", ";*/ 
+        //cout<<endl; 
+
         results.push_back(p4==this->expected[index++]); 
 
         Matrix<5,2,int> p5(0); 
         p5.multiply(m6,m2); 
-        //p5.toString(cout); 
+
+       /* m6.toString(cout); 
+        m2.toString(cout); 
+        cout<<endl; 
+        p5.toString(cout); 
+        for(size_t j=0;j<this->expected[index].size();++j)cout<<this->expected[index][j]<<", ";
+        cout<<endl; */ 
         results.push_back(p5==this->expected[index++]); 
 
         Matrix<4,1,int> p6(0); 
@@ -239,7 +250,12 @@ void UnitTest::runAllTests()
 
         Matrix<2,5,int> p8(0);
         p8.multiply(m2,m9.createTranspose()); 
-        //p8.toString(cout); 
+        //p8.toString(cout);cout<<endl;
+        //m2.toString(cout);cout<<endl;
+       // m9.toString(cout);cout<<endl; 
+        //(m9.createTranspose()).toString(cout); cout<<endl; 
+        //for(size_t j=0;j<this->expected[index].size();++j)cout<<this->expected[index][j]<<", ";
+
         results.push_back(p8==this->expected[index++]); 
 
         Matrix<1,4,double> p9(0); 
@@ -249,7 +265,11 @@ void UnitTest::runAllTests()
 
         Matrix<2,5,int> p10(0);
         p10.multiply(m2,m6.createTranspose()); 
-        //p10.toString(cout); 
+        /*m2.toString(cout);cout<<endl; 
+        m6.toString(cout);cout<<endl; 
+        p10.toString(cout);cout<<endl; 
+        for(size_t j=0;j<this->expected[index].size();++j)cout<<this->expected[index][j]<<", ";
+        cout<<endl;  */ 
         results.push_back(p10==this->expected[index++]); 
 
         Matrix<3,3,int> p11(0);

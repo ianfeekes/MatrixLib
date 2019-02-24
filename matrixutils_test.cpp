@@ -282,7 +282,7 @@ int main(int argc, char* argv[]){
 	test4Expected.push_back(v); 
 	v.clear(); 
 
-	/*
+	
 	vector<double> test4Scalars{4.31,0,1.5, -5.6, 10000,5.5, -3.14, 100, 17.5}; 
 	UnitTest test4(idIndex++, speak); 
 	if(speak)test4.setResults(testPrompt); 
@@ -290,7 +290,7 @@ int main(int argc, char* argv[]){
 	test4.setArguments(test1Arguments); 
 	test4.setScalars(test4Scalars); 
 	test4.setExpected(test4Expected); 
-	test4.runAllTests();  */ 
+	test4.runAllTests();   
 
 	testPrompt.clear(); 
 	testPrompt = {
@@ -326,33 +326,33 @@ int main(int argc, char* argv[]){
 	};
 	test5Expected.push_back(v); v.clear(); 
 	v={
-	-1325391862,32709,
-	-1325391862,32709,
-	-1325391862,32709,
-	-1325391862,32709,
-	1884160010,-451458129
+	10,15,
+	10,15,
+	10,15,
+	10,15,
+	10,15,
 	};
 	test5Expected.push_back(v); v.clear(); 
 	v={
-		40000,0,
-		40000,0,
-		25000,0,
-		20000,0,
-		20000,0,
+	40000,15000,
+	40000,15000,
+	25000,15000,
+	20000,7500,
+	20000,7500
 	};
 	test5Expected.push_back(v); v.clear();
 	v = {4,4,4,4}; 
 	test5Expected.push_back(v); v.clear(); 
 	v = {
-	0,0,0,0,0,
-	10,0,0,0,0
+	10,10,10,10,10,
+	-30,-30,-30,-30,-30
 	}; 
 	test5Expected.push_back(v); v.clear(); 
 	v = { 4.56,4.56,4.56,4.56};
 	test5Expected.push_back(v); v.clear(); 
 	v = {
 	-5000,-5000,2500,-2500,-2500,
-	-175207728,-175207728,-2059924784,2059879784,2059879784
+	-30000,-30000,-30000,-15000,-15000
 	};
 	test5Expected.push_back(v); v.clear(); 
 	v = {
