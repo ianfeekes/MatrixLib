@@ -242,8 +242,8 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		for(size_t i=0;i<M;++i)
 			for(size_t j=0;j<N;++j)
 			{
-				if(flag && this->arr[i][j]!=dataVec[vecIndex])return false; 
-				//else if(!flag && this->arr[i][j]!=static_cast<T>(dataVec[vecIndex]))return false; 
+				if(flag && this->arr[i][j]!=dataVec[vecIndex])return false;
+				else if(!flag && this->arr[i][j]!=static_cast<T>(dataVec[vecIndex]))return false; 
 				vecIndex++;
 			}
 		return true; 

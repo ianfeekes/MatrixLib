@@ -30,6 +30,8 @@ class UnitTest
 
         vector<vector<double>> arguments;   //Values to to initialize matrices to 
 
+        vector<double> scalars;             //Values used in scalar multiplication tests 
+
         vector<double> argumentsConst; 
 
          vector<bool> results;              //Outcome of each test is pushed back 
@@ -64,6 +66,8 @@ class UnitTest
         //Overload set expected for single-value constuctor unit testing 
         inline void setExpected(vector<double> expected){this->expectedConst = expected;}; 
 
+        inline void setScalars(vector<double> scalars){this->scalars = scalars;} 
+
         //Runs all tests
         void runAllTests(); 
 
@@ -92,8 +96,8 @@ class UnitTest
 void UnitTest::runAllTests()
 {
     size_t argI=0;                             //Index for the argument vector for initialization
-    //Create various matrices for testing 
-    
+    //Create various matrices for testing  
+    string operation = this->operation;
     Matrix<3,3,int> m1(this->arguments[argI++]); 
     Matrix<2,2,int> m2(this->arguments[argI++]); 
     Matrix<2,10,float> m3(this->arguments[argI++]);  
@@ -104,7 +108,7 @@ void UnitTest::runAllTests()
     Matrix<1,1,double> m8(this->arguments[argI++]); 
     Matrix<5,2,int> m9(this->arguments[argI++]); 
     size_t index=0; 
-    string operation = this->operation;
+
     if(operation.compare("multiply")==0)
     {
             
@@ -172,7 +176,7 @@ void UnitTest::runAllTests()
     }
     else if(operation.compare("equalizeSingle")==0)
     {
-     /*   results.push_back(m1==this->expectedConst[index++]);
+        results.push_back(m1==this->expectedConst[index++]);
         results.push_back(m2==this->expectedConst[index++]);
         results.push_back(m3==this->expectedConst[index++]);
         results.push_back(m4==this->expectedConst[index++]);
@@ -180,7 +184,28 @@ void UnitTest::runAllTests()
         results.push_back(m6==this->expectedConst[index++]);
         results.push_back(m7==this->expectedConst[index++]);
         results.push_back(m8==this->expectedConst[index++]);
-        results.push_back(m9==this->expectedConst[index++]); */ 
+        results.push_back(m9==this->expectedConst[index++]);   
+    }
+    else if(operation.compare("scalarMult")==0)
+    {
+        results.push_back(m1*this->scalars[index]==this->expected[index]);index++;
+        results.push_back(m2*this->scalars[index]==this->expected[index]);index++; 
+        results.push_back(m3*this->scalars[index]==this->expected[index]);index++; 
+        results.push_back(m4*this->scalars[index]==this->expected[index]);index++;
+        results.push_back(m5*this->scalars[index]==this->expected[index]);index++; 
+         //(m6*this->scalars[index]).toString(cout); 
+        results.push_back(m6*this->scalars[index]==this->expected[index]);index++; 
+        results.push_back(m7*this->scalars[index]==this->expected[index]);index++; 
+        index++; 
+        results.push_back(m9*this->scalars[index]==this->expected[index]);
+    }
+    else if(operation.compare("matrixMult")==0)
+    {
+        Matrix<3,3,int>;    //m1*m4
+        Matrix<2,5,int>        //m9*m2
+        Matrix<2,5,int>        //m6*m2       
+                                //m5*m8
+                                //m8*m5   
     }
 
     if(this->talk)

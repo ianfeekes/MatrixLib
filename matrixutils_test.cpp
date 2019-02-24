@@ -5,8 +5,10 @@
 #include <math.h> 							//For use of M_PI value 
 #include <string> 							//allows string methods, compare()
 
-using namespace std; 
-using namespace MATRIX; 
+using namespace std; 						//We want easy string, vector, << access
+using namespace MATRIX; 					//We want to simulate a user with matrix functions 
+
+//TODO: use "testPrompt" as a single string to avoid intializing too many variables 
 
 int main(int argc, char* argv[]){
 	cout<<"Entering Matrix Client";
@@ -15,16 +17,17 @@ int main(int argc, char* argv[]){
 	if(argc>2)
 	{
 		cout<<"Error: usage matrixclient [speak]/[quiet]"<<endl;
-		return 1; 
+		return 1; 							//Indicate failure due to improper arguments 
 	}
 	else if(argc>1){commandArg=argv[1];}
 	size_t idIndex=1; 
 	//Initialize our unit test with the capacity to talk based on user input 
 	bool speak;
-	if(commandArg.compare("quiet")==0 || commandArg.compare("")==0) speak=false; 
-	else speak=true;
+	if(commandArg.compare("talk")==0)speak=true; 
+	else speak=false; 
 	
-	vector<string> test1Prompt{
+	//string output representation for what each unit test is looking for 
+	vector<string> testPrompt{
 	"Test of 3x3 int matrix transposition with vector constructor returned:        ", 
  	"Test of 2x2 int matrix transposition with double vector constructor returned: ",
 	"Test of 2x10 float matrix transpose with double vector constructor returned:  ",
@@ -121,7 +124,7 @@ int main(int argc, char* argv[]){
 
 	//Initialize test1 with all necessary values and run it 
 	UnitTest test1(idIndex++, speak);
-	if(speak)test1.setResults(test1Prompt); 
+	if(speak)test1.setResults(testPrompt); 
 	test1.setOperations(testOperations); 
 	test1.setArguments(test1Arguments); 
 	test1.setExpected(test1Expected); 
@@ -131,7 +134,8 @@ int main(int argc, char* argv[]){
 
 	testOperations = "initialize"; 
 	vector<vector<double>>test2Arguments = test1Arguments;
-	vector<string> test2Prompt = {
+	testPrompt.clear(); 
+	testPrompt = {
 	"Test of initializing 3x3 int matrix returned:                                 ",
 	"Test of initializing 2x2 int matrix with double vector returned:              ",
 	"Test of initializing 2x10 float matrix with double vector returned:           ",
@@ -140,11 +144,12 @@ int main(int argc, char* argv[]){
 	"Test of initializing 5x2 int matrix returned:                                 ",
 	"Test of initializing 15x15 large double matrix returned:                      ",
 	"Test of initializing a single value double matrix returned:                   ",
-	"Test of initializing 5x2 int matrix returned:                                 "};
+	"Test of initializing 5x2 int matrix returned:                                 "
+	};
 
 	//Initialize test2 with all necessary values and run it 
 	UnitTest test2(idIndex++, speak); 
-	if(speak)test2.setResults(test2Prompt); 
+	if(speak)test2.setResults(testPrompt); 
 	test2.setOperations(testOperations);
 	test2.setArguments(test2Arguments); 
 	test2.setExpected(test2Arguments); 		//Initialization should be same in as out
@@ -153,33 +158,159 @@ int main(int argc, char* argv[]){
 
 
 	testOperations = "equalizeSingle"; 
-	vector<double>test3Arguments{-1.5,3,0,6.7,1000000005,6.56,3.14,54321,-1111}; 
-	vector<string >test3Prompt = {
-		"",
-		"", 
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		""
+	vector<vector<double>>test3Arguments;
+	v.clear(); 
+	for(size_t i=0;i<9;++i)v.push_back(-1.5); 
+	test3Arguments.push_back(v); 
+	v.clear(); 
+	for(size_t i=0;i<4;++i)v.push_back(3); 
+	test3Arguments.push_back(v); 
+	v.clear(); 
+	for(size_t i=0;i<20;++i)v.push_back(0); 
+	test3Arguments.push_back(v); 
+	v.clear(); 
+	for(size_t i=0;i<9;i++)v.push_back(6.7); 
+	test3Arguments.push_back(v); 
+	v.clear(); 
+	for(size_t i=0;i<4;++i)v.push_back(1000000005);
+	test3Arguments.push_back(v); 
+	v.clear(); 
+	for(size_t i=0;i<10;++i)v.push_back(6.56); 
+	test3Arguments.push_back(v); 
+	v.clear(); 
+	for(size_t i=0;i<225;++i)v.push_back(3.14);
+	test3Arguments.push_back(v); 
+	v.clear(); 
+	v.push_back(54321); 
+	test3Arguments.push_back(v); 
+	v.clear(); 
+	for(size_t i=0;i<10;++i)v.push_back(-1111); 
+	test3Arguments.push_back(v); 
+	v.clear(); 
+	testPrompt.clear(); 
+	testPrompt = {
+	"Test of initializing int matrix with negative value returned:                 ",
+	"Test of initializing int matrix with positive value returned:                 ", 
+	"Test of initializing zeroed out float matrix returned:                        ",
+	"Test of initializing 3x3 int matrix returned:                                 ",
+	"Test of initializing int matrix with double value returned:                   ",
+	"Test of initializing int matrix with positive value returned:                 ",
+	"Test of initializing large double matrix with double value returned:          ",
+	"Test of initializing a single value double matrix with int value returned:    ",
+	"Test of initializing int matrix with negative value returned:                 "
 	};
-	vector<double>test3Expected{-1,3,0,6,1000000005,6,3.14,54321,-1111};
-	
 
+	vector<double>test3Expected{-1,3,0,6.01,1000000005,6,3.14,54321,-1111};
 
-
-	/*UnitTest test3(idIndex++, speak); 
-	if(speak)test3.setResults(test3Prompt); 
+	UnitTest test3(idIndex++, speak); 
+	if(speak)test3.setResults(testPrompt); 
 	test3.setOperations(testOperations); 
 	test3.setArguments(test3Arguments); 
-	test3.setExpected(test3Expected); 
+	test3.setExpected(test3Expected);  
 	test3.runAllTests(); 
-	*/
-  
 
+	testOperations = "scalarMult";
+	testPrompt.clear(); 
+	testPrompt = {
+	"Test of multiplying int matrix with negative scalar integer returned:         ",
+	"Test of multiplying int matrix with positive scalar integer returned:         ",
+	"Test of multiplying float matrix with zero scalar returned:                   ",
+	"Test of multiplying int matrix with positive double returned:                 ", 
+	"Test of multiplying int matrix with very large integer returned:              ", 
+	"Test of multiplying large double matrix with reduced pi returned:             ",
+	"Test of multiplying int matrix with large integer returned:                   ",
+	"Test of multiplying int matrix with negative integer returned                 "
+	};
 
+	//This will be fixed later once calculations have been performed 
+	vector<vector<double>>test4Expected;
+	v = {4, 12, 4,
+		12, 4, 12,
+		 4, 12, 4
+	};
+	test4Expected.push_back(v); 
+	v.clear(); 
+	v = {
+		0,0,
+		0,0
+	};
+	test4Expected.push_back(v); 
+	v.clear(); 
+	v = {
+		2.25,3.75,0.75,2.25,3.75,0.75,2.25,3.75,0.75,2.25,
+		3.75,0.75,2.25,3.75,0.75,2.25,3.75,0.75,2.25,3.75
+	};
+	test4Expected.push_back(v); 
+	v.clear(); 
+	v = {
+		-35,-75,-110,
+		-150,-190,-225,
+		-265,-305,-340
+	};
+	test4Expected.push_back(v); 
+	v.clear(); 
+	v = {
+		-10000,
+		-10000,
+		-10000,
+		-10000
+	};
+	test4Expected.push_back(v); 
+	v.clear(); 
+	v = {
+		5000,-5000,
+		5000,-5000,
+		5000,-2500,
+		2500,-2500,
+		2500,-2500
+	};
+	test4Expected.push_back(v); 
+	v.clear(); 
+	for(size_t i=0;i<test1Arguments[6].size();++i)v.push_back(test1Arguments[6][i]*-3.14); 
+	test4Expected.push_back(v); 
+	v.clear(); 
+	v = {-456}; 
+	test4Expected.push_back(v); 
+	v.clear(); 
+	v = {
+		17,0,
+		17,0,
+		17,0,
+		17,0,
+		17,0,
+	};
+	test4Expected.push_back(v); 
+	v.clear(); 
+
+	vector<double> test4Scalars{4.31,0,1.5, -5.6, 10000,5.5, -3.14, 100, 17.5}; 
+	UnitTest test4(idIndex++, speak); 
+	if(speak)test4.setResults(testPrompt); 
+	test4.setOperations(testOperations); 
+	test4.setArguments(test1Arguments); 
+	test4.setScalars(test4Scalars); 
+	test4.setExpected(test4Expected); 
+	test4.runAllTests(); 
+
+	testPrompt.clear(); 
+	testPrompt = {
+	"",
+	"",
+	"",
+	"", 
+	"", 
+	"",
+	"",
+	""
+	};
+	vector<vector<double>> test5Expected = test4Expected; 
+
+	testOperations = "matrixMult"; 
+	UnitTest test5(idIndex++, speak); 
+	if(speak)test5.setResults(testPrompt); 
+	test5.setOperations(testOperations); 
+	test5.setArguments(test1Arguments); 
+	test5.setExpected(test5Expected); 
+	test5.runAllTests(); 
 
 	cout<<"Exiting Matrix Client"<<endl; 
 	return 0; 
