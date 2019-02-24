@@ -4,9 +4,11 @@
 #include <iostream> 
 #include <exception> 
 #include <fstream> 
+#include <math.h> 
 #include <vector> 			//Matrices can be initialized with vector objects 
 #include <map>				//This include may be taken out later 
 
+#define EPSILON .001 		//Used for double comparison 
 
 namespace MATRIX { 			//We want to define our own namespace for this library 
 
@@ -19,8 +21,8 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		const static size_t COLS=N; 
 
 	public: 
-		T arr[M][N]; 
 
+		T arr[M*N]; 
 		/*friend std::ostream& operator<< (std::ostream& out, const Matrix<M,N,T>& m)
 		{
 			const std::ios::fmtflags flags = out.flags(); 
@@ -126,17 +128,20 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		Matrix<M,N,T> scalarMult(const U val);//{for(size_t i=0;i<M;++i)for(size_t j=0;j<N;++j)this->arr[i][j]*=static_cast<T>(val);return *this;}
 
 		//*= scalar functionality 
-		inline void operator*=(const T val){for(size_t i=0;i<M;++i)for(size_t j=0;j<N;j++)this->arr[i][j]*=val;}
+		inline void operator*=(const T val){for(size_t i=0;i<M;++i)for(size_t j=0;j<N;j++)this->arr[(i*N)+j]*=val;}
 
 		//*= different-typed scalar functionality 
 		template<typename U>
-		inline void operator*=(const U val){for(size_t i=0;i<M;++i)for(size_t j=0;j<N;j++)this->arr[i][j]*=static_cast<T>(val);}
+		inline void operator*=(const U val){for(size_t i=0;i<M;++i)for(size_t j=0;j<N;j++)this->arr[(i*N)+j]*=static_cast<T>(val);}
 
 		void transpose(Matrix<N,M,T>& newTranspose) const; 
 
 		Matrix<N,M,T> createTranspose() const; 
 
 		void toString(std::ostream& out )const;
+
+		inline bool almostEquals(T a, T b){return (fabs(a-b) < EPSILON);} 
+
 	};
 	//END OF MATRIX CLASS HEADER AND INLINE METHODS 
 
@@ -158,7 +163,7 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 	Matrix<M,N,T>:: Matrix(T val)
 	{
 		for(size_t i=0;i<M;++i)
-			for(size_t j=0;j<N;++j)this->arr[i][j]=val; 
+			for(size_t j=0;j<N;++j)this->arr[(i*N)+j]=val; 
 	}
 
 	template<size_t M, size_t N, typename T> 
@@ -166,7 +171,7 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 	Matrix<M,N,T>:: Matrix(U val) 
 	{
 		for(size_t i=0;i<M;++i)
-			for(size_t j=0;j<N;++j)this->arr[i][j]=static_cast<T>(val); 
+			for(size_t j=0;j<N;++j)this->arr[(i*N)+j]=static_cast<T>(val); 
 	}
 
 	//THIS MAY NOT NEED TO BE INLINE 
@@ -185,7 +190,7 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		for(size_t i=0;i<M;++i)
 			for(size_t j=0;j<N;++j)
 			{
-				this->arr[i][j]=vec[ptr++]; 
+				this->arr[(i*N)+j]=vec[ptr++]; 
 			}
 	}
 
@@ -196,7 +201,7 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		int ptr = 0; 
 		for(size_t i=0;i<M;++i)
 			for(size_t j=0;j<N;++j)
-				this->arr[i][j]=static_cast<T>(vec[ptr++]); 
+				this->arr[(i*N)+j]=static_cast<T>(vec[ptr++]); 
 	}
 
 	//== operator for if all entries in a matrix are equal to a same-typed value 
@@ -213,7 +218,7 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 	bool Matrix<M, N, T>:: operator==(const Matrix<M,N,T>& compareMatrix) const
 	{
 		for(size_t i=0;i<M;++i)
-			for(size_t j=0;j<N;++j)if(this->arr[i][j]!=compareMatrix.arr[i][j])return false; 
+			for(size_t j=0;j<N;++j)if(this->arr[(i*N)+j]!=compareMatrix.arr[(i*N)+j])return false; 
 		return true; 
 	}	
 
@@ -223,10 +228,16 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 	bool Matrix<M,N,T>:: operator==(const std::vector<T>& dataVec) const
 	{
 		if(dataVec.size()!=M*N)return false; 
+		bool flag = false; 
+		if(typeid(T)==typeid(float) || typeid(T)==typeid(double))flag=true; 
 		int vecIndex=0; 
 		for(size_t i=0;i<M;++i)
 			for(size_t j=0;j<N;++j)
-				if(this->arr[i][j]!=dataVec[vecIndex++])return false; 
+			{
+				if(flag)if(fabs(this->arr[i*N+j]-dataVec[vecIndex])>=EPSILON)return false; 
+				if(!flag)if(this->arr[i*N+j]!=dataVec[vecIndex])return false; 
+				vecIndex++; 
+			}
 		return true; 
 	}
 
@@ -235,15 +246,15 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 	template<typename U> 
 	bool Matrix<M,N,T>:: operator==(const std::vector<U>& dataVec) const
 	{
+		if(dataVec.size()!=M*N)return false; 
 		bool flag = false; 
 		if(typeid(T)==typeid(float) && typeid(U)==typeid(double))flag=true;
-		if(dataVec.size()!=M*N)return false; 
 		int vecIndex=0; 
 		for(size_t i=0;i<M;++i)
 			for(size_t j=0;j<N;++j)
 			{
-				if(flag && this->arr[i][j]!=dataVec[vecIndex])return false;
-				else if(!flag && this->arr[i][j]!=static_cast<T>(dataVec[vecIndex]))return false; 
+				if(flag && fabs(this->arr[i*N+j]-dataVec[vecIndex])>=EPSILON)return false;
+				else if(!flag && this->arr[i*N+j]!=static_cast<T>(dataVec[vecIndex]))return false; 
 				vecIndex++;
 			}
 		return true; 
@@ -255,7 +266,7 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 	{
 		for(size_t i=0;i<M;++i)
 			for(size_t j=0;j<N;++j)
-				if(this->arr[i][j]!=static_cast<T>(compareMatrix.arr[i][j]))return false;
+				if(this->arr[i*N+j]!=static_cast<T>(compareMatrix.arr[i][j]))return false;
 		return true; 
 	}
 
@@ -279,7 +290,7 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		}
 		for(size_t i=0;i<M;++i)
 			for(size_t j=0;j<N;++j)
-				this->arr[i][j]=newData[i*N+j];
+				this->arr[i*N+j]=newData[i*N+j];
 		return *this; 
 	}
 
@@ -288,7 +299,7 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 	const Matrix<M,N,T>& Matrix<M,N,T>:: operator=(const T singleValue)
 	{
 		for(size_t i=0;i<M;++i)
-			for(size_t j=0;j<N;++j)this->arr[i][j]=singleValue; 
+			for(size_t j=0;j<N;++j)this->arr[i*N+j]=singleValue; 
 		return *this; 
 	}
 	
@@ -296,21 +307,16 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 	template<size_t P> 
 	void Matrix<M, N, T>:: multiply( const Matrix<M,P,T>& m1, const Matrix<P,N,T>& m2)
 	{
+		T currEntry=0; 
 		for(size_t i=0;i<M;++i)
 			for(size_t j=0;j<N;++j)
 			{
-				//While template values remain implicit, a static cast at compile time works 
-				
-				//T& currEntry = this->arr[i][j]; 
-				
-				T currEntry = 0;//static_cast<T>(0.0); 
+				currEntry = 0;
 				for(size_t k=0;k<P;++k)
 				{
-					//while(m1.arr[i][k]==0 && k<P)k++;
-					//while(m2.arr[k][j]==0 && j<N)j++; 
-					currEntry+=m1.arr[i][k]*m2.arr[k][j]; 
+					if(m1.arr[i*P+k]!=0 && m2.arr[k*N+j]!=0)currEntry+=m1.arr[i*P+k]*m2.arr[k*N+j]; 
 				}
-				this->arr[i][j]=currEntry; 
+				this->arr[i*N+j]=currEntry; 
 			}
 	}  
 
@@ -321,21 +327,16 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 	template<size_t P, typename U> 
 	void Matrix<M, N, T>:: multiply( const Matrix<M,P,T>& m1, const Matrix<P,N,U>& m2)
 	{
+		T currEntry=0; 
 		for(size_t i=0;i<M;++i)
 			for(size_t j=0;j<N;++j)
-			{
-				//While template values remain implicit, a static cast at compile time works 
-				
-				//T& currEntry = this->arr[i][j]; 
-				
-				T currEntry = 0;//static_cast<T>(0.0); 
+			{	
+				currEntry = 0;
 				for(size_t k=0;k<P;++k)
 				{
-					//while(m1.arr[i][k]==0)k++;
-					//while(m2.arr[k][j]==0)j++; 
-					currEntry+=static_cast<T>(m1.arr[i][k]*m2.arr[k][j]); 
+					if(m1.arr[i*P+k]!=0 && m2.arr[k*N+j]!=0)currEntry+=static_cast<T>(m1.arr[i*P+k]*m2.arr[k*N+j]); 
 				}
-				this->arr[i][j]=currEntry; 
+				this->arr[i*N+j]=currEntry; 
 			}
 	}  
 
@@ -361,7 +362,7 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 	Matrix<M,N,T> Matrix<M,N,T>:: scalarMult(const T val)
 	{
 		for(size_t i=0;i<M;++i)
-			for(size_t j=0;j<N;++j)this->arr[i][j]*=val;
+			for(size_t j=0;j<N;++j)this->arr[i*N+j]*=val;
 		return *this;
 	}
 
@@ -370,27 +371,9 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 	Matrix<M,N,T> Matrix<M,N,T>:: scalarMult(const U val)
 	{
 		for(size_t i=0;i<M;++i)
-			for(size_t j=0;j<N;++j)this->arr[i][j]*=static_cast<T>(val);
+			for(size_t j=0;j<N;++j)this->arr[i*N+j]*=static_cast<T>(val);
 		return *this;
 	}
-
-	//Scalar multiplication implementation is trivial but necessary for user possibilities 
-/*	template<size_t M, size_t N, typename T> 
-	Matrix<M,N,T> Matrix<M,N,T>:: operator*(const T val)
-	{
-		for(size_t i=0;i<M;++i)
-			for(size_t j=0;j<N;++j)this->arr[i][j]*=val;
-		return *this;
-	}
-
-	template<size_t M, size_t N, typename T> 
-	template<typename U> 
-	Matrix<M,N,T> Matrix<M,N,T>:: operator*(const U val)
-	{
-		for(size_t i=0;i<M;++i)
-			for(size_t j=0;j<N;++j)this->arr[i][j]*=static_cast<T>(val);
-		return *this;
-	} */ 
 
 	/*Sets the data fields in the new Transpose matrix to the transpose of the matrix calling 
 	 *the function. 
@@ -411,7 +394,7 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		 * this must be permitted to allow transposition to run in O(n) or O(N*M) time for the total 
 		 * number of entries within a given matrix.*/
 		for(size_t i=0;i<M;i++) 
-			for(size_t j=0;j<N;j++)newTranspose.arr[j][i] = this->arr[i][j]; 
+			for(size_t j=0;j<N;j++)newTranspose.arr[j*M+i] = this->arr[i*N+j]; 
 	}
 
 	/*Returns the transpose of a given matrix. Does this by creating a new matrix of the appropriate fields
@@ -442,7 +425,7 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 			out<<"["; 
 			for(size_t j=0;j<N;++j)
 			{
-				out<<this->arr[i][j];
+				out<<this->arr[i*N+j];
 				if(j<N-1)out<<",";
 			}
 			out<<"]"<<std::endl; 

@@ -207,85 +207,63 @@ void UnitTest::runAllTests()
 	    Matrix<3,3,int> p1(0);
         p1.multiply(i1,i2);
 	    results.push_back(p1==this->expected[index++]); 
-        
         Matrix<3,3,int> p2(0); 
         p2.multiply(m1,m4); 
-        //p2.toString(cout); 
         results.push_back(p2==this->expected[index++]); 
-
         Matrix<3,3,int> p3(0); 
         p3.multiply(m4,m4); 
-        //p3.toString(cout); 
         results.push_back(p3==this->expected[index++]); 
-
         Matrix<5,2,int> p4(0); 
         p4.multiply(m9,m2); 
-       /* m9.toString(cout); 
-        m2.toString(cout);cout<<endl; 
-        p4.toString(cout); 
-        for(size_t j=0;j<this->expected[index].size();++j)cout<<this->expected[index][j]<<", ";*/ 
-        //cout<<endl; 
-
         results.push_back(p4==this->expected[index++]); 
-
         Matrix<5,2,int> p5(0); 
         p5.multiply(m6,m2); 
-
-       /* m6.toString(cout); 
-        m2.toString(cout); 
-        cout<<endl; 
-        p5.toString(cout); 
-        for(size_t j=0;j<this->expected[index].size();++j)cout<<this->expected[index][j]<<", ";
-        cout<<endl; */ 
         results.push_back(p5==this->expected[index++]); 
-
         Matrix<4,1,int> p6(0); 
         p6.multiply(m5,m8); 
-        //p6.toString(cout); 
         results.push_back(p6==this->expected[index++]); 
-
-     /*   Matrix<3,3,int> p7(0); 
-        p7.multiply(m5, m9.createTranspose()); 
-        p7.toString(cout); */ 
-
         Matrix<2,5,int> p8(0);
         p8.multiply(m2,m9.createTranspose()); 
-        //p8.toString(cout);cout<<endl;
-        //m2.toString(cout);cout<<endl;
-       // m9.toString(cout);cout<<endl; 
-        //(m9.createTranspose()).toString(cout); cout<<endl; 
-        //for(size_t j=0;j<this->expected[index].size();++j)cout<<this->expected[index][j]<<", ";
-
         results.push_back(p8==this->expected[index++]); 
-
         Matrix<1,4,double> p9(0); 
         p9.multiply(m8,m5.createTranspose()); 
-        //p9.toString(cout); 
         results.push_back(p9==this->expected[index++]); 
-
         Matrix<2,5,int> p10(0);
         p10.multiply(m2,m6.createTranspose()); 
-        /*m2.toString(cout);cout<<endl; 
-        m6.toString(cout);cout<<endl; 
-        p10.toString(cout);cout<<endl; 
-        for(size_t j=0;j<this->expected[index].size();++j)cout<<this->expected[index][j]<<", ";
-        cout<<endl;  */ 
         results.push_back(p10==this->expected[index++]); 
-
         Matrix<3,3,int> p11(0);
         p11.multiply(m1,m4.createTranspose());
-        //p11.toString(cout); 
         results.push_back(p11==this->expected[index++]); 
-     /* Matrix<3,3,int> p1 = m4*m1; 
-      Matrix<3,3,int> p2 = m4*m4; 
-      Matrix<2,5,int> p3 = m9*m2;
-      Matrix<2,5,int> p4 = m6*m2; 
-      Matrix<1,1,int> p5 = m5*m8; 
-      Matrix<3,3,int> p6 = m5*(m1.createTranspose()); 
-      Matrix<2,5,int> p7 = m2*(m9.createTranspose()); 
-      Matrix<1,1,double> p8 = m8*(m5.createTranspose()); 
-      Matrix<2,5,int> p9 = m2*(m6.createTranspose()); 
-      Matrix<3,3,int> p10 = m1*(m4.createTranspose()); */ 
+    }
+    else if(operation.compare("transMult")==0)
+    {
+       Matrix<3,3,int> p1 = m1*(m1.createTranspose()); 
+       results.push_back(p1==this->expected[index++]); 
+       //p1.toString(cout); 
+       Matrix<2,2,int> p2 = m2*(m2.createTranspose()); 
+       results.push_back(p2==this->expected[index++]); 
+       //p2.toString(cout); 
+       Matrix<2,2,float> p3 = m3*(m3.createTranspose()); 
+       results.push_back(p3==this->expected[index++]); 
+       //p3.toString(cout); 
+       Matrix<3,3,int> p4 = m4*(m4.createTranspose());
+       results.push_back(p4==this->expected[index++]); 
+       //p4.toString(cout); 
+       Matrix<4,4,int> p5 = m5*(m5.createTranspose()); 
+       results.push_back(p5==this->expected[index++]); 
+       //p5.toString(cout); 
+       Matrix<5,5,int> p6 = m6*(m6.createTranspose()); 
+       results.push_back(p6==this->expected[index++]); 
+       //p6.toString(cout); 
+       Matrix<15,15,double> p7 = m7*(m7.createTranspose()); 
+       results.push_back(p7==this->expected[index++]); 
+       //p7.toString(cout); 
+       Matrix<1,1,double> p8 = m8*(m8.createTranspose());
+       results.push_back(p8==this->expected[index++]); 
+       
+       
+       Matrix<5,5,int> p9 = m9*(m9.createTranspose()); 
+       results.push_back(p9==this->expected[index]); 
     }
 
     if(this->talk)

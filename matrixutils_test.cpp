@@ -371,11 +371,82 @@ int main(int argc, char* argv[]){
 	test5.setExpected(test5Expected); 
 	test5.runAllTests(); 
 
-	/*Matrix<3,3,int> i1(1); 
-	Matrix<3,3,int> i2(-2); 
-	Matrix<3,3,int> p1(0);
-	p1.multiply(i1,i2); 
-	p1.toString(cout); */ 
+	testPrompt.clear(); 
+	testPrompt = {
+	"Test of multiplying 3x3 int single element matrix with transpose returned:    ",
+	"Test of multiplying 3x3 int various element matrix with transpose returned:   ",
+	"Test of multiplying square int matrix with its tranpose returned:             ",
+	"Test of multiplying 5x2 matrix float matrix with its transpose returned:      ", 
+	"Test of multiplying square int matrix with its transpose returned:            ", 
+	"Test of multiplying 15x15 giant double matrix with transpose returned:        ",
+	"Test of multiplying single value double matrix with transpose returned:       ",
+	"Test of multiplying 5x5 int matrix with transpose returned:                   ",
+	};
+
+	vector<vector<double>> test6Expected; 
+	v.clear(); 
+	v ={
+	11,9,11,
+	9,19,9,
+	11,9,11
+	};
+	test6Expected.push_back(v); v.clear(); 
+	v = {
+		325,-300,
+		-300,900
+	}; 
+	test6Expected.push_back(v); v.clear(); 
+	v={
+		28.5,21,
+		21,32.5
+	};
+	test6Expected.push_back(v); v.clear(); 
+	v={
+		758,1770,2782,
+		1770,4369,6968,
+		2782,6968,11154
+	};
+	test6Expected.push_back(v); v.clear(); 
+	for(size_t i=0;i<16;++i)v.push_back(1); 
+	test6Expected.push_back(v); v.clear(); 
+	v={
+	2000000,2000000,1500000,1000000,1000000,
+	2000000,2000000,1500000,1000000,1000000,
+	1500000,1500000,1250000,750000,750000,
+	1000000,1000000,750000,500000,500000,
+	1000000,1000000,750000,500000,500000
+	};
+	test6Expected.push_back(v); v.clear(); 
+	v={	//I 100% used pre-existing matrix calculators to compute these 
+	15,38,61,84,107,130,155,180,203,226,249,272,295,320,345,
+	38,131,222,313,404,495,590,683,776,867,958,1049,1140,1235,1328,
+	61,222,383,542,701,860,1025,1186,1347,1508,1667,1826,1985,2150,2311,
+	84,313,542,771,998,1225,1460,1689,1918,2147,2376,2603,2830,3065,3294,
+	107,404,701,998,1295,1590,1895,2192,2489,2786,3083,3380,3675,3980,4277,
+	130,495,860,1225,1590,1955,2330,2695,3060,3425,3790,4155,4520,4895,5260,
+	155,590,1025,1460,1895,2330,2780,3215,3650,4085,4520,4955,5390,5840,6275,
+	180,683,1186,1689,2192,2695,3215,3720,4223,4726,5229,5732,6235,6755,7260,
+	203,776,1347,1918,2489,3060,3650,4223,4796,5367,5938,6509,7080,7670,8243,
+	226,867,1508,2147,2786,3425,4085,4726,5367,6008,6647,7286,7925,8585,9226,
+	249,958,1667,2376,3083,3790,4520,5229,5938,6647,7356,8063,8770,9500,10209,
+	272,1049,1826,2603,3380,4155,4955,5732,6509,7286,8063,8840,9615,10415,11192,
+	295,1140,1985,2830,3675,4520,5390,6235,7080,7925,8770,9615,10460,11330,12175,
+	320,1235,2150,3065,3980,4895,5840,6755,7670,8585,9500,10415,11330,12275,13190,
+	345,1328,2311,3294,4277,5260,6275,7260,8243,9226,10209,11192,12175,13190,14175
+	};
+	test6Expected.push_back(v); v.clear(); 
+	v.push_back(20.7936); test6Expected.push_back(v); v.clear(); 
+	for(size_t i=0;i<25;++i)v.push_back(1); 
+	test6Expected.push_back(v); v.clear(); 
+
+	testOperations = "transMult"; 
+	UnitTest test6(idIndex++, speak); 
+	if(speak)test6.setResults(testPrompt); 
+	test6.setOperations(testOperations); 
+	test6.setArguments(test1Arguments); 
+	test6.setExpected(test6Expected); 
+	test6.runAllTests(); 
+
 
 	cout<<"Exiting Matrix Client"<<endl; 
 	return 0; 
