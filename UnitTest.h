@@ -7,10 +7,21 @@
 #include <vector> 
 #include <math.h> 		    
 #include "Matrix.h" 
-#include <unordered_map>    //Hash table 
+#include <unordered_map>                    //Hash table 
 
-using namespace std;                        //vectors, strings << 
+using namespace std;                        //vectors, strings, << 
 using namespace MATRIX;                     //matrix library 
+
+/* This class' purpose is an attempt to automate matrix unit testing. It allows you to simply pass
+   in data for matrix initialization and expected matrices, along with an operation and it will 
+   evaluate the results and output them in string representation if the user desires. 
+
+   Unfortunately, since matrices are represented as a template class, a matrix cannot be passed into
+   a conventional container (like a vector) and as such, this unit testing, while automated, still 
+   contains an unfavorable amount of superfluous code. A next step if the matix library is to be expanded
+   is to create a matrix container that allows for them to be passed into a sort of pseudo vector for
+   more flexible initialization of matrices and testing. 
+*/ 
 
 class UnitTest
 {
@@ -75,24 +86,26 @@ class UnitTest
         void evaluateResults(); 
 
         string toString() const; 
-
-        
+   
 };
 
- void UnitTest::setArguments(vector<vector<double>> arguments)
- {
+/*Sets vectors to initialize the matrices with. Double data type works because the matrix 
+  constructor will do the type conversion for us. */ 
+void UnitTest::setArguments(vector<vector<double>> arguments)
+{
     this->expected.clear(); 
-    //for(size_t i=0;i<this->arguments.size();++i)this->arguments[i].clear(); 
     this->arguments=arguments;
- }
+}
 
+ //Sets expected 
  void UnitTest::setExpected(vector<vector<double>> expected)
  {
      this->expected.clear(); 
-     //for(size_t i=0;i<this->expected.size();++i)this->expected[i].clear(); 
      this->expected=expected; 
  }
 
+/*Initializes matrices with vectors or constant values passed in, and runs matrix tests
+ *based on the operator or functionality we are testing.*/ 
 void UnitTest::runAllTests()
 {
     size_t argI=0;                             //Index for the argument vector for initialization
@@ -108,13 +121,27 @@ void UnitTest::runAllTests()
     Matrix<15,15,double> m7(this->arguments[argI++]); 
     Matrix<1,1,double> m8(this->arguments[argI++]); 
     Matrix<5,2,int> m9(this->arguments[argI++]); 
-    size_t index=0; 
 
-    if(operation.compare("multiply")==0)
+
+   /* for(size_t i=0;i<this->arguments.size();++i)
     {
-            
-    }
-    else if(operation.compare("transpose")==0)
+        for(size_t j=0;j<this->arguments[i].size();++j)cout<<this->arguments[i][j]<<", ";
+        cout<<endl; 
+    }*/ 
+    /*for(size_t j=0;j<this->arguments[argI].size();++j)cout<<this->arguments[argI][j]<<", "; 
+    cout<<endl; */ 
+
+    Matrix<3,2,double> m10(this->arguments[argI++]); 
+    Matrix<3,3,double> m11(this->arguments[argI++]); 
+    Matrix<4,2,float> m12(this->arguments[argI++]); 
+    Matrix<2,3,float> m13(this->arguments[argI++]); 
+
+
+    Matrix<2,3,long> m14(this->arguments[argI++]); 
+    Matrix<3,4,long> m15(this->arguments[argI++]); 
+    
+    size_t index=0; 
+    if(operation.compare("transpose")==0)
     {
         Matrix<3,3,int> t1= m1.createTranspose();  
         results.push_back(t1==this->expected[index++]);
@@ -194,7 +221,6 @@ void UnitTest::runAllTests()
         results.push_back(m3.scalarMult(this->scalars[index])==this->expected[index]);index++; 
         results.push_back(m4.scalarMult(this->scalars[index])==this->expected[index]);index++;
         results.push_back(m5.scalarMult(this->scalars[index])==this->expected[index]);index++; 
-         //(m6*this->scalars[index]).toString(cout); 
         results.push_back(m6.scalarMult(this->scalars[index])==this->expected[index]);index++; 
         results.push_back(m7.scalarMult(this->scalars[index])==this->expected[index]);index++; 
         index++; 
@@ -234,38 +260,54 @@ void UnitTest::runAllTests()
         Matrix<3,3,int> p11(0);
         p11.multiply(m1,m4.createTranspose());
         results.push_back(p11==this->expected[index++]); 
+        Matrix<3,2, double> p12(0); 
+        p12.multiply(m11,m10); 
+        results.push_back(p12==this->expected[index++]); 
+        Matrix<2,3,double> p13(0); 
+        p13.multiply(m10.createTranspose(), m11); 
+        results.push_back(p13==this->expected[index++]); 
+        Matrix<4,3,float> p14(0); 
+        p14.multiply(m12,m13); 
+        results.push_back(p14==this->expected[index++]); 
+        Matrix<2,4,long> p15(0); 
+        p15.multiply(m14,m15); 
+        results.push_back(p15==this->expected[index++]); 
+
     }
     else if(operation.compare("transMult")==0)
     {
        Matrix<3,3,int> p1 = m1*(m1.createTranspose()); 
        results.push_back(p1==this->expected[index++]); 
-       //p1.toString(cout); 
        Matrix<2,2,int> p2 = m2*(m2.createTranspose()); 
        results.push_back(p2==this->expected[index++]); 
-       //p2.toString(cout); 
        Matrix<2,2,float> p3 = m3*(m3.createTranspose()); 
        results.push_back(p3==this->expected[index++]); 
-       //p3.toString(cout); 
        Matrix<3,3,int> p4 = m4*(m4.createTranspose());
        results.push_back(p4==this->expected[index++]); 
-       //p4.toString(cout); 
        Matrix<4,4,int> p5 = m5*(m5.createTranspose()); 
        results.push_back(p5==this->expected[index++]); 
-       //p5.toString(cout); 
        Matrix<5,5,int> p6 = m6*(m6.createTranspose()); 
        results.push_back(p6==this->expected[index++]); 
-       //p6.toString(cout); 
        Matrix<15,15,double> p7 = m7*(m7.createTranspose()); 
-       results.push_back(p7==this->expected[index++]); 
-       //p7.toString(cout); 
+       results.push_back(p7==this->expected[index++]);  
        Matrix<1,1,double> p8 = m8*(m8.createTranspose());
        results.push_back(p8==this->expected[index++]); 
-       
-       
        Matrix<5,5,int> p9 = m9*(m9.createTranspose()); 
-       results.push_back(p9==this->expected[index]); 
+       results.push_back(p9==this->expected[index++]); 
+       Matrix<3,3,double> p10 = m10*(m10.createTranspose()); 
+       results.push_back(p10==this->expected[index++]); 
+       Matrix<3,3,double> p11 = m11*(m11.createTranspose()); 
+       results.push_back(p11==this->expected[index++]); 
+       Matrix<4,4,float> p12 = m12*(m12.createTranspose()); 
+       results.push_back(p12==this->expected[index++]); 
+       Matrix<2,2,float> p13 = m13*(m13.createTranspose()); 
+       results.push_back(p13==this->expected[index++]); 
+       Matrix<2,2,long> p14 = m14*(m14.createTranspose()); 
+       results.push_back(p14==this->expected[index++]); 
+       Matrix<3,3,long> p15 = m15*(m15.createTranspose()); 
+       results.push_back(p15==this->expected[index++]); 
     }
-
+    //Determines if it needs to compute strings for outputting or now 
     if(this->talk)
     {
         this->evaluateResults(); 
@@ -273,6 +315,7 @@ void UnitTest::runAllTests()
     }
 }
 
+//Appends string representation of test results to each part for user outputting 
 void UnitTest:: evaluateResults() 
 {
     string str = ""; 
@@ -283,6 +326,7 @@ void UnitTest:: evaluateResults()
     }
 }
 
+//Turns wordvec into a single string to output
 string UnitTest::toString() const 
 {
     string toReturn = ""; 

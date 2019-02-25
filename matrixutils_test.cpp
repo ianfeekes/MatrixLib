@@ -8,8 +8,10 @@
 using namespace std; 						//We want easy string, vector, << access
 using namespace MATRIX; 					//We want to simulate a user with matrix functions 
 
-//TODO: use "testPrompt" as a single string to avoid intializing too many variables 
-
+/* Takes in command lines for specifying outputting results of each individual test. Initializes
+ * unit tests and data vectors for arguments, expected, strings, and operations for each test. 
+ * Specifically aims to test initialization and constructors, '==' operator, '*' operator, and 
+ * the transpose methods.*/
 int main(int argc, char* argv[]){
 	cout<<"Entering Matrix Client";
 	string commandArg = ""; 
@@ -17,15 +19,13 @@ int main(int argc, char* argv[]){
 	if(argc>2)
 	{
 		cout<<"Error: usage matrixclient [speak]/[quiet]"<<endl;
-		return 1; 							//Indicate failure due to improper arguments 
+		return 1; 										//Indicate failure from improper arguments 
 	}
 	else if(argc>1){commandArg=argv[1];}
-	size_t idIndex=1; 
-	//Initialize our unit test with the capacity to talk based on user input 
-	bool speak;
+	size_t idIndex=1; 									//ID of each unit test we initialize
+	bool speak;											//Flag for sending strings to stdout
 	if(commandArg.compare("talk")==0)speak=true; 
 	else speak=false; 
-	
 	//string output representation for what each unit test is looking for 
 	vector<string> testPrompt{
 	"Test of 3x3 int matrix transposition with vector constructor returned:        ", 
@@ -46,12 +46,11 @@ int main(int argc, char* argv[]){
 	"TransposeTo on single-value double matrix returned                            ",
 	"Casting double constructor on int matrix and transposeTo returned:            "
 	};
-	
-	//This will be modified to have a key for each piece of functionality we are testing 
-	string testOperations = "transpose"; 
-
+	//Set proper data fields for the unit test 
+	string testOperations = "transpose"; 				
 	vector<vector<double>> test1Arguments; 
 	vector<vector<double>> test1Expected; 
+	//We aim to create our arguments with various types, values and lengths to test for edge cases 
 	vector<double> v= {1,3,1,3,1,3,1,3,1}; 
 	test1Arguments.push_back(v); 
 	test1Expected.push_back(v); 
@@ -120,18 +119,52 @@ int main(int argc, char* argv[]){
 	v.clear(); 
 	for(size_t i=1;i<11;++i)v.push_back(i%2); 
 	test1Arguments.push_back(v); 
-	v.clear(); 
-
-	//Initialize test1 with all necessary values and run it 
+	v.clear();
+	v = {
+	-2,	3,	 
+	1,	5,
+	7,	2,
+	};
+	test1Arguments.push_back(v); v.clear(); 
+	v = {
+	5,	3,	-1,	 
+	1,	-3,	6,
+	0,	2,	4
+	};
+	test1Arguments.push_back(v); v.clear(); 
+	v = {
+	5,	3,	 
+	0,	-2,
+	-3,	1,
+	6,	-1,
+	};
+	test1Arguments.push_back(v); v.clear(); 
+	v = {
+	2,	-4,	3,	 
+	0,	5,	4
+	};
+	test1Arguments.push_back(v); v.clear(); 
+	v = {
+	3,	2,	4,	 
+	6,	5,	7,	
+	};
+	test1Arguments.push_back(v); v.clear(); 
+	v = {
+		-1,	-4,	2,	0,	 
+		3,	4,	5,	6,
+		7,	-3,	8,	9,
+	};
+	test1Arguments.push_back(v); v.clear(); 
+	//Pass all of our data fields created above into our unit test structure 
 	UnitTest test1(idIndex++, speak);
 	if(speak)test1.setResults(testPrompt); 
 	test1.setOperations(testOperations); 
 	test1.setArguments(test1Arguments); 
 	test1.setExpected(test1Expected); 
+	//Run all tests for this transposition case 
 	test1.runAllTests(); 
 
-
-
+	//Set all our data fields for our second test of constructors. This one is simple to check 
 	testOperations = "initialize"; 
 	vector<vector<double>>test2Arguments = test1Arguments;
 	testPrompt.clear(); 
@@ -146,7 +179,6 @@ int main(int argc, char* argv[]){
 	"Test of initializing a single value double matrix returned:                   ",
 	"Test of initializing 5x2 int matrix returned:                                 "
 	};
-
 	//Initialize test2 with all necessary values and run it 
 	UnitTest test2(idIndex++, speak); 
 	if(speak)test2.setResults(testPrompt); 
@@ -155,8 +187,7 @@ int main(int argc, char* argv[]){
 	test2.setExpected(test2Arguments); 		//Initialization should be same in as out
 	test2.runAllTests(); 
 
-
-
+	//Set data for test3 on more initialization to make sure our matrices are exactly as expected 
 	testOperations = "equalizeSingle"; 
 	vector<vector<double>>test3Arguments;
 	v.clear(); 
@@ -185,8 +216,43 @@ int main(int argc, char* argv[]){
 	test3Arguments.push_back(v); 
 	v.clear(); 
 	for(size_t i=0;i<10;++i)v.push_back(-1111); 
-	test3Arguments.push_back(v); 
-	v.clear(); 
+	test3Arguments.push_back(v); v.clear(); 
+	v = {
+	-2,	3,	 
+	1,	5,
+	7,	2,
+	};
+	test3Arguments.push_back(v); v.clear(); 
+	v = {
+	5,	3,	-1,	 
+	1,	-3,	6,
+	0,	2,	4
+	};
+	test3Arguments.push_back(v); v.clear(); 
+	v = {
+	5,	3,	 
+	0,	-2,
+	-3,	1,
+	6,	-1,
+	};
+	test3Arguments.push_back(v); v.clear(); 
+	v = {
+	2,	-4,	3,	 
+	0,	5,	4
+	};
+	test3Arguments.push_back(v); v.clear(); 
+	v = {
+	3,	2,	4,	 
+	6,	5,	7,	
+	};
+	test3Arguments.push_back(v); v.clear(); 
+	v = {
+		-1,	-4,	2,	0,	 
+		3,	4,	5,	6,
+		7,	-3,	8,	9,
+	};
+	test3Arguments.push_back(v); v.clear(); 
+
 	testPrompt.clear(); 
 	testPrompt = {
 	"Test of initializing int matrix with negative value returned:                 ",
@@ -303,7 +369,11 @@ int main(int argc, char* argv[]){
 	"Test of multiplying double and int matrices after transposition returned:     ",
 	"Test of multiplying 2x5 with 2x5 post transposition returned:                 ",
 	"Test above post transposition with matrices reversed returned:                ",
-	"Test of multiplying 3x3 with matrix transposed into a vector returned:        "
+	"Test of multiplying 3x3 with matrix transposed into a vector returned:        ",
+	"Test of multiplying 3x3 double with 3x2 double returned:                      ",
+	"Test of multiplying 2x3 double with 3x3 double returned:                      ",
+	"Test of multiplying 4x2 float with 2x3 float returned:                        ",
+	"Test of multiplying 2x3 long with 2x4 long returned:                          ",
 	};
 	vector<vector<double>> test5Expected;// = test4Expected; 
 	v.clear(); 
@@ -361,6 +431,29 @@ int main(int argc, char* argv[]){
 	74,189,304
 	};
 	test5Expected.push_back(v); v.clear(); 
+	v = {
+	-14,28,	 
+	37,	0,
+	30,	18,
+	};
+	test5Expected.push_back(v); v.clear(); 
+	v = {
+	-9,5,36,
+	20,-2,35
+	};
+	test5Expected.push_back(v); v.clear(); 
+	v = {
+	10,	-5,	27,	 
+	0,	-10,-8,
+	-6,	17,	-5,
+	12,	-29, 14	
+	}; 
+	test5Expected.push_back(v); v.clear(); 
+	v ={
+	31,	-16, 48, 48,	 
+	58,	-25, 93, 93
+	};
+	test5Expected.push_back(v); v.clear(); 
 
 
 	testOperations = "matrixMult"; 
@@ -381,6 +474,12 @@ int main(int argc, char* argv[]){
 	"Test of multiplying 15x15 giant double matrix with transpose returned:        ",
 	"Test of multiplying single value double matrix with transpose returned:       ",
 	"Test of multiplying 5x5 int matrix with transpose returned:                   ",
+	"Test of multiplying 3x3 double matrix with 3x3 double matrix returned:        ",
+	"Test of multiplying 3x3 double matrix with 3x3 double matrix returned:        ",
+	"Test of multiplying 4x2 float matrix with 2x4 float matrix returned:          ",
+	"Test of multiplying 2x3 float matrix with 3x2 float matrix returned:          ",
+	"Test of multiplying 2x3 long matrix with 3x2 long matrix returned:            ",
+	"Test of multiplying 3x4 long matrix with 4x3 long matrix returned:            "
 	};
 
 	vector<vector<double>> test6Expected; 
@@ -437,6 +536,41 @@ int main(int argc, char* argv[]){
 	test6Expected.push_back(v); v.clear(); 
 	v.push_back(20.7936); test6Expected.push_back(v); v.clear(); 
 	for(size_t i=0;i<25;++i)v.push_back(1); 
+	test6Expected.push_back(v); v.clear(); 
+	v = {
+	13,13,-8,
+	13,26,17,
+	-8,17,53
+	};
+	test6Expected.push_back(v); v.clear(); 
+	v = {
+	35,-10,2,
+	-10,46,18,
+	2,18,20
+	};
+	test6Expected.push_back(v); v.clear(); 
+	v = {
+	34,-6,-12,27,
+	-6,4,-2,2,
+	-12,-2,10,-19,
+	27,2,-19,37
+	};
+	test6Expected.push_back(v); v.clear(); 
+	v = {
+	29,-8,
+	-8,41
+	};
+	test6Expected.push_back(v); v.clear(); 
+	v = {
+	29,56,
+	56,110
+	};
+	test6Expected.push_back(v); v.clear(); 
+	v = {
+	21,-9,21,
+	-9,86,103,
+	21,103,203
+	};
 	test6Expected.push_back(v); v.clear(); 
 
 	testOperations = "transMult"; 
