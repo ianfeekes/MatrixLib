@@ -8,7 +8,7 @@
 #include <vector> 			//Matrices can be initialized with vector objects 
 #include <map>				//This include may be taken out later 
 
-#define EPSILON .001 		//Used for double comparison 
+#define EPSILON .001 		//Used for floating point comparison == 
 
 namespace MATRIX { 			//We want to define our own namespace for this library 
 
@@ -22,14 +22,8 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 
 	public: 
 
-		T arr[M*N]; 
-		/*friend std::ostream& operator<< (std::ostream& out, const Matrix<M,N,T>& m)
-		{
-			const std::ios::fmtflags flags = out.flags(); 
-
-		} */ 
-
-		typedef T value_type; 
+		//Array representation of data for cache hit maximization
+		T arr[M*N];  
 		
 		//Empty constructor 
 		Matrix(); 
@@ -48,22 +42,17 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		//Vector constructor 
 		Matrix(const std::vector<T> values); 
 
+		//Different-typed vector constructor 
 		template<typename U> 
 		Matrix(const std::vector<U> values); 
 
-		//Access rows 
-		inline size_t getRows() const {return this->ROWS;} 
-		
-		//Access cols 
-		inline size_t getCols() const {return this->COLS;}
-
-		//Operator most relevant in use
+		//Same-typed matrices contain all elements of same value 
 		bool operator==(const Matrix <M,N,T>& compareMatrix) const; 
-		
-		//Matrix with same columns and rows but holds a different data type
-		template<typename U> 
-		bool operator==(const Matrix <M,N,U>& compareMatrix) const;
 
+		//Different-typed matrices with fitting row-col arrangement
+		template<typename U> 
+		bool operator==(const Matrix<M,N,U>& compareMatrix) const;
+		
 		//Matrix of same type but different column and row numbers 
 		template<size_t O, size_t P>
 		inline bool operator==(const Matrix<O,P,T>&) const{return false;}
@@ -86,12 +75,6 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		//Entirely different matrix 
 		template<size_t O, size_t P, typename U>
 		inline bool operator==(const Matrix<O,P,U>&) const{return false;}
-
-		//Comparing every entry in the matrix with a single value 
-		/*bool operator==(const T val); 
-
-		template<typename U> 
-		bool operator==(const U val); */ 
 
 		//Used to copy from a matrix of identical data fields
 		const Matrix<M,N,T>& operator=(const Matrix<M,N,T >& toCopy);
@@ -122,10 +105,11 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		Matrix<M,P,T> operator*(const Matrix<N,P,U>& multiplyMatrix) const; 
 
 		//Scalar multiplication implementation is trivial but necessary for user possibilities 
-		Matrix<M,N,T> scalarMult(const T val);//{for(size_t i=0;i<M;++i)for(size_t j=0;j<N;++j)this->arr[i][j]*=val;return *this;}
+		Matrix<M,N,T> scalarMult(const T val);
 
+		//Different-typed scalar multiplication 
 		template<typename U> 
-		Matrix<M,N,T> scalarMult(const U val);//{for(size_t i=0;i<M;++i)for(size_t j=0;j<N;++j)this->arr[i][j]*=static_cast<T>(val);return *this;}
+		Matrix<M,N,T> scalarMult(const U val);
 
 		//*= scalar functionality 
 		inline void operator*=(const T val){for(size_t i=0;i<M;++i)for(size_t j=0;j<N;j++)this->arr[(i*N)+j]*=val;}
@@ -134,28 +118,25 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		template<typename U>
 		inline void operator*=(const U val){for(size_t i=0;i<M;++i)for(size_t j=0;j<N;j++)this->arr[(i*N)+j]*=static_cast<T>(val);}
 
+		//Sets transposition data into a matrix with proper fields 
 		void transpose(Matrix<N,M,T>& newTranspose) const; 
 
+		//More user-friendly transposition functionality 
 		Matrix<N,M,T> createTranspose() const; 
 
+		//Output representation 
 		void toString(std::ostream& out )const;
 
-		inline bool almostEquals(T a, T b){return (fabs(a-b) < EPSILON);} 
-
-	};
-	//END OF MATRIX CLASS HEADER AND INLINE METHODS 
+	};//End of matrix class
 
 
+	//CONSIDER DELETING THIS 
 	template<size_t M, size_t N, typename T> 
 	Matrix<M, N, T>:: Matrix() 
 	{
 		T copyArr [M*N]= {0}; 
 		memcpy( this->arr, copyArr, M * N * sizeof(T));
     	return *this;
-
-
-
-		//for(size_t i=0;i<M;++i)this->arr[i]=copyArr; 
 	}
 
 	//Matrices can be initialized through values 
@@ -166,6 +147,7 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 			for(size_t j=0;j<N;++j)this->arr[(i*N)+j]=val; 
 	}
 
+	//Different-typed single-value constructor 
 	template<size_t M, size_t N, typename T> 
 	template<typename U> 
 	Matrix<M,N,T>:: Matrix(U val) 
@@ -174,44 +156,42 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 			for(size_t j=0;j<N;++j)this->arr[(i*N)+j]=static_cast<T>(val); 
 	}
 
-	//THIS MAY NOT NEED TO BE INLINE 
+	//Cpy constructor for matrices of different fields. Just changes pointer 
 	template<size_t M, size_t N, typename T> 
 	template<size_t P, size_t Q, typename U> 
-	inline Matrix<M, N, T>:: Matrix(const Matrix<P, Q, U>& copyMatrix)
+	Matrix<M, N, T>:: Matrix(const Matrix<P, Q, U>& copyMatrix)
 	{
 		*this=copyMatrix; 
 	}
 
+	//Same-typed vector constructor 
 	template<size_t M, size_t N, typename T> 
 	Matrix<M, N, T>:: Matrix(const std::vector<T> vec)
 	{
-		//T dataEntries[M][N]; 
+		//Test and throw errors for monkey-at-the-keyboard behavior 
+		if(typeid(T)==typeid(char) || typeid(T)==typeid(std::string))
+			std::cerr<<"Error: cannot initialize matrix with string or char data types"<<std::endl; 
+		if(vec.size()!=M*N)
+			std::cerr<<"Error: attempt to initialize matrix with vector that does not contain correct amount of entries"<<std::endl;   
 		int ptr = 0; 
 		for(size_t i=0;i<M;++i)
-			for(size_t j=0;j<N;++j)
-			{
-				this->arr[(i*N)+j]=vec[ptr++]; 
-			}
+			for(size_t j=0;j<N;++j)this->arr[(i*N)+j]=vec[ptr++]; 
 	}
 
+	//Different-typed vector constructor 
 	template<size_t M, size_t N, typename T> 
 	template<typename U>
 	Matrix<M,N,T>:: Matrix(const std::vector<U> vec)
 	{
+		if(typeid(T)==typeid(char) || typeid(T)==typeid(std::string))
+			std::cerr<<"Error: cannot initialize matrix with string or char data types"<<std::endl; 
+		if(vec.size()!=M*N)
+			std::cerr<<"Error: attempt to initialize matrix with vector that does not contain correct amount of entries"<<std::endl;   
 		int ptr = 0; 
 		for(size_t i=0;i<M;++i)
 			for(size_t j=0;j<N;++j)
 				this->arr[(i*N)+j]=static_cast<T>(vec[ptr++]); 
 	}
-
-	//== operator for if all entries in a matrix are equal to a same-typed value 
-/*	template<size_t M, size_t N, typename T> 
-	bool Matrix<M,N,T>:: operator==(const T val)
-	{
-		for(size_t i=0;i<M;i++)
-			for(size_t j=0;j<N;++j)if(this->arr[i][j]!=val)return false; 
-		return true; 
-	} */ 
 	
 	//Compares each entry between the two matrices assuming they contain the same value type 
 	template<size_t M, size_t N, typename T> 
@@ -222,6 +202,15 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		return true; 
 	}	
 
+	//Different-typed matrix comparison operator simply uses static cast 
+	template<size_t M, size_t N, typename T> 
+	template<typename U> 
+	bool Matrix<M, N, T>:: operator==(const Matrix<M,N,U>& compareMatrix) const
+	{
+		for(size_t i=0;i<M;++i)
+			for(size_t j=0;j<N;++j)if(this->arr[(i*N)+j]!=static_cast<T>(compareMatrix.arr[(i*N)+j]))return false; 
+		return true; 
+	}
 
 	//Comparison with a vector that holds the same data fields 
 	template<size_t M, size_t N, typename T> 
@@ -260,21 +249,11 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		return true; 
 	}
 
-	template<size_t M, size_t N, typename T> 
-	template<typename U>
-	bool Matrix<M,N,T>:: operator==(const Matrix<M,N,U>& compareMatrix) const
-	{
-		for(size_t i=0;i<M;++i)
-			for(size_t j=0;j<N;++j)
-				if(this->arr[i*N+j]!=static_cast<T>(compareMatrix.arr[i][j]))return false;
-		return true; 
-	}
-
 	//This is used for copying matrices with the same fields 
 	template< size_t M, size_t N, typename T>
 	const Matrix<M,N,T>& Matrix<M,N,T>::operator=( const Matrix< M, N, T >& toCopy)
 	{
-    	memcpy( this->arr, toCopy.arr, M * N * sizeof(T));
+    	memcpy( this->arr, toCopy.arr, M * N * sizeof(T));	//Simply rearranges addressse
     	return *this;
 	}
 
@@ -303,11 +282,14 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		return *this; 
 	}
 	
+	/*This is the heart of matrix multiplication. The for loops allow reduction of cache misses.
+	 This is the most straightforward algorithm for non-square matrices for O(M*N*P) time, which
+	 could still be faster.*/ 
 	template<size_t M, size_t N, typename T> 
 	template<size_t P> 
 	void Matrix<M, N, T>:: multiply( const Matrix<M,P,T>& m1, const Matrix<P,N,T>& m2)
 	{
-		T currEntry=0; 
+		T currEntry=0; 					//Initialize our value here to avoid reallocating same variable
 		for(size_t i=0;i<M;++i)
 			for(size_t j=0;j<N;++j)
 			{
@@ -340,6 +322,7 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 			}
 	}  
 
+	//Simply creates a new matrix that has been zeroed out, calls multiply, and returns it
 	template<size_t M, size_t N,  typename T> 
 	template<size_t P> 
 	Matrix<M, P, T> Matrix<M, N, T>:: operator*(const Matrix<N,P,T>& multiplyMatrix) const
@@ -349,6 +332,7 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		return productMatrix; 
 	}
 
+	//Same as above, it simply calls the appropriate multiply and allows preventation of errors being thrown 
 	template<size_t M, size_t N, typename T>
 	template<size_t P, typename U> 
 	Matrix<M, P, T> Matrix<M, N, T>:: operator*(const Matrix<N,P,U>& multiplyMatrix) const
@@ -358,6 +342,7 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		return productMatrix; 
 	}
 
+	//Trivial algorithm, but still may prove useful 
 	template<size_t M, size_t N, typename T> 
 	Matrix<M,N,T> Matrix<M,N,T>:: scalarMult(const T val)
 	{
@@ -366,6 +351,8 @@ namespace MATRIX { 			//We want to define our own namespace for this library
 		return *this;
 	}
 
+	/*Different-typed scalarMult. Overloading may seem superfluous, but avoiding taking a static_cast
+	  call for each entry in a potentially huge matrix saves on time. */ 
 	template<size_t M, size_t N, typename T> 
 	template<typename U> 
 	Matrix<M,N,T> Matrix<M,N,T>:: scalarMult(const U val)
