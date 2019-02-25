@@ -1,3 +1,5 @@
+//Author: Ian Feekes, ianfeekes@gmail.com 
+
 #ifndef _MATRIX_H_
 #define _MATRIX_H_
 
