@@ -19,8 +19,8 @@ using namespace MATRIX;                     //matrix library
    Unfortunately, since matrices are represented as a template class, a matrix cannot be passed into
    a conventional container (like a vector) and as such, this unit testing, while automated, still 
    contains an unfavorable amount of superfluous code. A next step if the matix library is to be expanded
-   is to create a matrix container that allows for them to be passed into a sort of pseudo vector for
-   more flexible initialization of matrices and testing. 
+   is to create a matrix container that allows for templatized-matrices to be passed into a sort of pseudo
+   vector for more flexible initialization of matrices and testing. 
 */ 
 
 class UnitTest
@@ -34,6 +34,8 @@ class UnitTest
         vector<string> resultsString;       //For outputting to determine which calls failed 
 
         string operation;                   //Determines test type 
+
+        string testString; 
 
         vector<vector<double>> expected;    //Expected vectors for matrices 
 
@@ -56,7 +58,8 @@ class UnitTest
         } 
 
         //Constructor set to remain silent 
-        UnitTest(const size_t ID, bool talk = false){this->ID=ID;this->talk=talk;}
+        UnitTest(const size_t ID, bool talk = false, string testString="")
+            {this->ID=ID;this->testString = testString;this->talk=talk;}
 
         //Strings for outputting results 
         inline void setResults(vector<string> resultsList){this->resultsString.clear();this->resultsString=resultsList;} 
@@ -86,6 +89,8 @@ class UnitTest
         void evaluateResults(); 
 
         string toString() const; 
+
+        void outLog(std::ostream& out) const;
    
 };
 
@@ -316,7 +321,7 @@ void UnitTest::runAllTests()
 }
 
 //Appends string representation of test results to each part for user outputting 
-void UnitTest:: evaluateResults() 
+void UnitTest::evaluateResults() 
 {
     string str = ""; 
     for(size_t i=0;i<this->results.size();++i)
@@ -332,6 +337,14 @@ string UnitTest::toString() const
     string toReturn = ""; 
     for(size_t i=0;i<this->resultsString.size();++i)toReturn = toReturn+this->resultsString[i];  
     return toReturn; 
+}
+
+void UnitTest::outLog(std::ostream& out) const 
+{
+    int numSuccess =0; 
+    for(size_t i=0;i<this->results.size();++i)if(this->results[i])numSuccess++; 
+    out<<"Test: "<<this->ID<<" Passed "<<numSuccess<<"/"<<this->results.size()<<"tests."<<endl; 
+    out<<"The purpose of this test was to: "<<testString<<endl; 
 }
 
 #endif 

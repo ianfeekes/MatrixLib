@@ -156,7 +156,7 @@ int main(int argc, char* argv[]){
 	};
 	test1Arguments.push_back(v); v.clear(); 
 	//Pass all of our data fields created above into our unit test structure 
-	UnitTest test1(idIndex++, speak);
+	UnitTest test1(idIndex++, speak, "Testing transposition");
 	if(speak)test1.setResults(testPrompt); 
 	test1.setOperations(testOperations); 
 	test1.setArguments(test1Arguments); 
@@ -180,7 +180,7 @@ int main(int argc, char* argv[]){
 	"Test of initializing 5x2 int matrix returned:                                 "
 	};
 	//Initialize test2 with all necessary values and run it 
-	UnitTest test2(idIndex++, speak); 
+	UnitTest test2(idIndex++, speak, "test of various vector initialization methods"); 
 	if(speak)test2.setResults(testPrompt); 
 	test2.setOperations(testOperations);
 	test2.setArguments(test2Arguments); 
@@ -268,7 +268,7 @@ int main(int argc, char* argv[]){
 
 	vector<double>test3Expected{-1,3,0,6.01,1000000005,6,3.14,54321,-1111};
 
-	UnitTest test3(idIndex++, speak); 
+	UnitTest test3(idIndex++, speak, "Initializing matrices from single values"); 
 	if(speak)test3.setResults(testPrompt); 
 	test3.setOperations(testOperations); 
 	test3.setArguments(test3Arguments); 
@@ -350,7 +350,7 @@ int main(int argc, char* argv[]){
 
 	
 	vector<double> test4Scalars{4.31,0,1.5, -5.6, 10000,5.5, -3.14, 100, 17.5}; 
-	UnitTest test4(idIndex++, speak); 
+	UnitTest test4(idIndex++, speak, "Testing for scalar mutiplication"); 
 	if(speak)test4.setResults(testPrompt); 
 	test4.setOperations(testOperations); 
 	test4.setArguments(test1Arguments); 
@@ -457,7 +457,7 @@ int main(int argc, char* argv[]){
 
 
 	testOperations = "matrixMult"; 
-	UnitTest test5(idIndex++, speak); 
+	UnitTest test5(idIndex++, speak, "Testing multiplication between various matrices"); 
 	if(speak)test5.setResults(testPrompt); 
 	test5.setOperations(testOperations); 
 	test5.setArguments(test1Arguments); 
@@ -574,13 +574,19 @@ int main(int argc, char* argv[]){
 	test6Expected.push_back(v); v.clear(); 
 
 	testOperations = "transMult"; 
-	UnitTest test6(idIndex++, speak); 
+	UnitTest test6(idIndex++, speak, "Checking multiply and transposition functions"); 
 	if(speak)test6.setResults(testPrompt); 
 	test6.setOperations(testOperations); 
 	test6.setArguments(test1Arguments); 
 	test6.setExpected(test6Expected); 
 	test6.runAllTests(); 
 
+	test1.outLog(cout); 
+	test2.outLog(cout); 
+	test3.outLog(cout); 
+	test4.outLog(cout); 
+	test5.outLog(cout); 
+	test6.outLog(cout); 
 
 	cout<<"Exiting Matrix Client"<<endl; 
 	return 0; 
