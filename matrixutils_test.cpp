@@ -8,8 +8,7 @@
 using namespace std; 						//We want easy string, vector, << access
 using namespace MATRIX; 					//We want to simulate a user with matrix functions 
 
-/* Takes in command lines for specifying outputting results of each individual test. Initializes
- * unit tests and data vectors for arguments, expected, strings, and operations for each test. 
+/* Initializes unit tests and data vectors for arguments, expected, strings, and operations for each test. 
  * Specifically aims to test initialization and constructors, '==' operator, '*' operator, and 
  * the transpose methods. A detailed log of each of the tests can be found at the end of this file
  * 
@@ -21,38 +20,7 @@ using namespace MATRIX; 					//We want to simulate a user with matrix functions
  */
 int main(int argc, char* argv[]){
 	cout<<"Entering Matrix Client";
-	string commandArg = ""; 
-	//Check command line prompt. Defaults to quiet if user enters nothing 
-	if(argc>2)
-	{
-		cout<<"Error: usage matrixclient [speak]/[quiet]"<<endl;
-		return 1; 										//Indicate failure from improper arguments 
-	}
-	else if(argc>1){commandArg=argv[1];}
 	size_t idIndex=1; 									//ID of each unit test we initialize
-	bool speak;											//Flag for sending strings to stdout
-	if(commandArg.compare("talk")==0)speak=true; 
-	else speak=false; 
-	//string output representation for what each unit test is looking for 
-	vector<string> testPrompt{
-	"Test of 3x3 int matrix transposition with vector constructor returned:        ", 
- 	"Test of 2x2 int matrix transposition with double vector constructor returned: ",
-	"Test of 2x10 float matrix transpose with double vector constructor returned:  ",
-	"Test of 3x3 int matrix transpose with double vector constructor returned:     ", 
-	"Test of 4x1 int matrix transpose with vector constructor returned:            ",
-	"Test of 5x2 int matrix tranpose with vector constructor returned:             ",
-	"Test of 15x15 large double matrix transpose with vector constructor returned: ", 
-	"Test of single value double matrix transpose with vector constructor returned:", 
-	"Test of 5x2 int matrix transposition with vector constructor returned:        ", 
-	"Test of 3x3 int matrix with single value constructor transposeTo returned:    ", 
-	"Test of 2x2 matrix with dif. type value constructor transposeTo returned:     ",
-	"Test of float matrix with dif. type value constructor transposeTo returned:   ",
-	"Test of int matrix with dif. type constructor transposeTo returned:           ",
-	"TranposeTo on non-square int matrix with single value constructor returned:   ",
-	"Attempt of casting diff value constructor to large double matrix transposeTo  ",
-	"TransposeTo on single-value double matrix returned                            ",
-	"Casting double constructor on int matrix and transposeTo returned:            "
-	};
 	//Set proper data fields for the unit test 
 	string testOperations = "transpose"; 				
 	vector<vector<double>> test1Arguments; 
@@ -101,32 +69,41 @@ int main(int argc, char* argv[]){
 		2,4,6,8,10,12,15,17,19,21,23,25,27,30,32};
 	test1Expected.push_back(v); 
 	v.clear(); 
-	test1Expected.push_back(vector<double>{-4.56});
+	test1Expected.push_back(vector<double>{-4.56565656565656565656565656565656565656565656565656565656565656});
 	v={1,1,1,1,1,
        0,0,0,0,0}; 
 	test1Expected.push_back(v); 
 	v.clear(); 
+	//Aiming to create a large matrix containing floating point values with 3 or 4 bits 
 	for(size_t i=1;i<21;++i)v.push_back(i%3 + .5); 
 	test1Arguments.push_back(v); 
 	v.clear(); 
+	//Double values initialized to 5 or 6 bits 
 	for(size_t i=1;i<10;++i)v.push_back(7.6656*i);
 	test1Arguments.push_back(v);
 	v.clear(); 
+	//Testing a vector of all negative values as may be seen in graphics applications 
 	v = {-1,-1,-1,-1}; 
 	test1Arguments.push_back(v); 
 	v.clear(); 
+	//Testing a matrix that has larger int values of signed type 
 	v = {1000,-1000,1000,-1000,1000,-500,500,-500,500,-500}; 
 	test1Arguments.push_back(v); 
 	v.clear(); 
+	/*Testing a matrix containing many entries where each entry may have a large amount of bytes 
+	  by forcing division by a prime number */ 
 	for(size_t i=1;i<=225;++i)v.push_back(i/7); 
 	test1Arguments.push_back(v); 
 	v.clear(); 
-	v = {-4.56}; 
+	//Maximum digits that can be held by a signed double 
+	v = {-4.56565656565656565656565656565656565656565656565656565656565656}; 
 	test1Arguments.push_back(v); 
 	v.clear(); 
+	//Varying 0s and 1s to check for 
 	for(size_t i=1;i<11;++i)v.push_back(i%2); 
 	test1Arguments.push_back(v); 
 	v.clear();
+	//Several single-integer matrices of differing M and N, primarily for multiplication testing
 	v = {
 	-2,	3,	 
 	1,	5,
@@ -163,37 +140,21 @@ int main(int argc, char* argv[]){
 	};
 	test1Arguments.push_back(v); v.clear(); 
 	//Pass all of our data fields created above into our unit test structure 
-	UnitTest test1(idIndex++, speak, "Testing transposition");
-	if(speak)test1.setResults(testPrompt); 
+	UnitTest test1(idIndex++, "Testing transposition");
 	test1.setOperations(testOperations); 
 	test1.setArguments(test1Arguments); 
 	test1.setExpected(test1Expected); 
 	//Run all tests for this transposition case 
 	test1.runAllTests(); 
-
 	//Set all our data fields for our second test of constructors. This one is simple to check 
 	testOperations = "initialize"; 
 	vector<vector<double>>test2Arguments = test1Arguments;
-	testPrompt.clear(); 
-	testPrompt = {
-	"Test of initializing 3x3 int matrix returned:                                 ",
-	"Test of initializing 2x2 int matrix with double vector returned:              ",
-	"Test of initializing 2x10 float matrix with double vector returned:           ",
-	"Test of initializing 3x3 int matrix returned:                                 ",
-	"Test of initializing 4x1 int matrix returned:                                 ",
-	"Test of initializing 5x2 int matrix returned:                                 ",
-	"Test of initializing 15x15 large double matrix returned:                      ",
-	"Test of initializing a single value double matrix returned:                   ",
-	"Test of initializing 5x2 int matrix returned:                                 "
-	};
 	//Initialize test2 with all necessary values and run it 
-	UnitTest test2(idIndex++, speak, "test of various vector initialization methods"); 
-	if(speak)test2.setResults(testPrompt); 
+	UnitTest test2(idIndex++, "test of various vector initialization methods"); 
 	test2.setOperations(testOperations);
 	test2.setArguments(test2Arguments); 
 	test2.setExpected(test2Arguments); 		//Initialization should be same in as out
 	test2.runAllTests(); 
-
 	//Set data for test3 on more initialization to make sure our matrices are exactly as expected 
 	testOperations = "equalizeSingle"; 
 	vector<vector<double>>test3Arguments;
@@ -260,40 +221,15 @@ int main(int argc, char* argv[]){
 	};
 	test3Arguments.push_back(v); v.clear(); 
 
-	testPrompt.clear(); 
-	testPrompt = {
-	"Test of initializing int matrix with negative value returned:                 ",
-	"Test of initializing int matrix with positive value returned:                 ", 
-	"Test of initializing zeroed out float matrix returned:                        ",
-	"Test of initializing 3x3 int matrix returned:                                 ",
-	"Test of initializing int matrix with double value returned:                   ",
-	"Test of initializing int matrix with positive value returned:                 ",
-	"Test of initializing large double matrix with double value returned:          ",
-	"Test of initializing a single value double matrix with int value returned:    ",
-	"Test of initializing int matrix with negative value returned:                 "
-	};
-
 	vector<double>test3Expected{-1,3,0,6.01,1000000005,6,3.14,54321,-1111};
 
-	UnitTest test3(idIndex++, speak, "Initializing matrices from single values"); 
-	if(speak)test3.setResults(testPrompt); 
+	UnitTest test3(idIndex++, "Initializing matrices from single values"); 
 	test3.setOperations(testOperations); 
 	test3.setArguments(test3Arguments); 
 	test3.setExpected(test3Expected);  
 	test3.runAllTests(); 
 
 	testOperations = "scalarMult";
-	testPrompt.clear(); 
-	testPrompt = {
-	"Test of multiplying int matrix with negative scalar integer returned:         ",
-	"Test of multiplying int matrix with positive scalar integer returned:         ",
-	"Test of multiplying float matrix with zero scalar returned:                   ",
-	"Test of multiplying int matrix with positive double returned:                 ", 
-	"Test of multiplying int matrix with very large integer returned:              ", 
-	"Test of multiplying large double matrix with reduced pi returned:             ",
-	"Test of multiplying int matrix with large integer returned:                   ",
-	"Test of multiplying int matrix with negative integer returned                 "
-	};
 
 	//This will be fixed later once calculations have been performed 
 	vector<vector<double>>test4Expected;
@@ -357,31 +293,13 @@ int main(int argc, char* argv[]){
 
 	
 	vector<double> test4Scalars{4.31,0,1.5, -5.6, 10000,5.5, -3.14, 100, 17.5}; 
-	UnitTest test4(idIndex++, speak, "Testing for scalar mutiplication"); 
-	if(speak)test4.setResults(testPrompt); 
+	UnitTest test4(idIndex++, "Testing for scalar mutiplication");  
 	test4.setOperations(testOperations); 
 	test4.setArguments(test1Arguments); 
 	test4.setScalars(test4Scalars); 
 	test4.setExpected(test4Expected); 
 	test4.runAllTests();   
 
-	testPrompt.clear(); 
-	testPrompt = {
-	"Test of multiplying 3x3 int matrices with single value elements returned:     ",
-	"Test of multiplying 3x3 int matrices with various value elements returned:    ",
-	"Test of multiplying square int matrix with itself returned:                   ",
-	"Test of multiplying 5x2 matrix with a 2x2 matrix returned:                    ", 
-	"Test of multiplying int matrix with a single-entry double matrix returned:    ", 
-	"Test of multiplying non-square matrices after transposition returned:         ",
-	"Test of multiplying double and int matrices after transposition returned:     ",
-	"Test of multiplying 2x5 with 2x5 post transposition returned:                 ",
-	"Test above post transposition with matrices reversed returned:                ",
-	"Test of multiplying 3x3 with matrix transposed into a vector returned:        ",
-	"Test of multiplying 3x3 double with 3x2 double returned:                      ",
-	"Test of multiplying 2x3 double with 3x3 double returned:                      ",
-	"Test of multiplying 4x2 float with 2x3 float returned:                        ",
-	"Test of multiplying 2x3 long with 2x4 long returned:                          ",
-	};
 	vector<vector<double>> test5Expected;// = test4Expected; 
 	v.clear(); 
 	v={
@@ -464,30 +382,11 @@ int main(int argc, char* argv[]){
 
 
 	testOperations = "matrixMult"; 
-	UnitTest test5(idIndex++, speak, "Testing multiplication between various matrices"); 
-	if(speak)test5.setResults(testPrompt); 
+	UnitTest test5(idIndex++, "Testing multiplication between various matrices"); 
 	test5.setOperations(testOperations); 
 	test5.setArguments(test1Arguments); 
 	test5.setExpected(test5Expected); 
 	test5.runAllTests(); 
-
-	testPrompt.clear(); 
-	testPrompt = {
-	"Test of multiplying 3x3 int single element matrix with transpose returned:    ",
-	"Test of multiplying 3x3 int various element matrix with transpose returned:   ",
-	"Test of multiplying square int matrix with its tranpose returned:             ",
-	"Test of multiplying 5x2 matrix float matrix with its transpose returned:      ", 
-	"Test of multiplying square int matrix with its transpose returned:            ", 
-	"Test of multiplying 15x15 giant double matrix with transpose returned:        ",
-	"Test of multiplying single value double matrix with transpose returned:       ",
-	"Test of multiplying 5x5 int matrix with transpose returned:                   ",
-	"Test of multiplying 3x3 double matrix with 3x3 double matrix returned:        ",
-	"Test of multiplying 3x3 double matrix with 3x3 double matrix returned:        ",
-	"Test of multiplying 4x2 float matrix with 2x4 float matrix returned:          ",
-	"Test of multiplying 2x3 float matrix with 3x2 float matrix returned:          ",
-	"Test of multiplying 2x3 long matrix with 3x2 long matrix returned:            ",
-	"Test of multiplying 3x4 long matrix with 4x3 long matrix returned:            "
-	};
 
 	vector<vector<double>> test6Expected; 
 	v.clear(); 
@@ -541,7 +440,7 @@ int main(int argc, char* argv[]){
 	345,1328,2311,3294,4277,5260,6275,7260,8243,9226,10209,11192,12175,13190,14175
 	};
 	test6Expected.push_back(v); v.clear(); 
-	v.push_back(20.7936); test6Expected.push_back(v); v.clear(); 
+	v.push_back(20.845); test6Expected.push_back(v); v.clear(); 
 	for(size_t i=0;i<25;++i)v.push_back(1); 
 	test6Expected.push_back(v); v.clear(); 
 	v = {
@@ -581,8 +480,7 @@ int main(int argc, char* argv[]){
 	test6Expected.push_back(v); v.clear(); 
 
 	testOperations = "transMult"; 
-	UnitTest test6(idIndex++, speak, "Checking multiply and transposition functions"); 
-	if(speak)test6.setResults(testPrompt); 
+	UnitTest test6(idIndex++, "Checking multiply and transposition functions");  
 	test6.setOperations(testOperations); 
 	test6.setArguments(test1Arguments); 
 	test6.setExpected(test6Expected); 

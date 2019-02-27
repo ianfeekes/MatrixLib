@@ -10,17 +10,15 @@
 #include <vector> 			//Matrices can be initialized with vector objects 
 #include <map>				//This include may be taken out later 
 
-#define EPSILON .001 		//Used for floating point comparison == 
+#define EPSILON .01 		/*Used for floating point comparison. defined as a rather
+							   large degree of uncertainty in order to account for potential
+							   overflow that may result from multiplication of floating point
+							   values */ 
 
 namespace MATRIX { 			//We want to define our own namespace for this library 
 
 	template<size_t M, size_t N, typename T = int> 
 	class Matrix{
-	//We make our matrices a friend with the ostream operator for nice testing representation
-
-	private: 
-		const static size_t ROWS=M;
-		const static size_t COLS=N; 
 
 	public: 
 

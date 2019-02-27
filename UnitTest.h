@@ -29,8 +29,6 @@ class UnitTest
 
         size_t ID;                          //Each test gets an ID 
 
-        bool talk;                          //If the user wants to see string-formatted results
-
         vector<string> resultsString;       //For outputting to determine which calls failed 
 
         string operation;                   //Determines test type 
@@ -51,18 +49,9 @@ class UnitTest
 
     public: 
 
-        friend std::ostream& operator << (std::ostream& out, const UnitTest& test)
-        {
-            out<<test.toString(); 
-            return out; 
-        } 
-
         //Constructor set to remain silent 
-        UnitTest(const size_t ID, bool talk = false, string testString="")
-            {this->ID=ID;this->testString = testString;this->talk=talk;}
-
-        //Strings for outputting results 
-        inline void setResults(vector<string> resultsList){this->resultsString.clear();this->resultsString=resultsList;} 
+        UnitTest(const size_t ID, string testString="")
+            {this->ID=ID;this->testString = testString;}
 
 
         //Operations for the matrices to perform during this test 
@@ -84,11 +73,6 @@ class UnitTest
 
         //Runs all tests
         void runAllTests(); 
-
-        //Used for appending to string output representation 
-        void evaluateResults(); 
-
-        string toString() const; 
 
         void outLog(std::ostream& out) const;
    
@@ -126,22 +110,10 @@ void UnitTest::runAllTests()
     Matrix<15,15,double> m7(this->arguments[argI++]); 
     Matrix<1,1,double> m8(this->arguments[argI++]); 
     Matrix<5,2,int> m9(this->arguments[argI++]); 
-
-
-   /* for(size_t i=0;i<this->arguments.size();++i)
-    {
-        for(size_t j=0;j<this->arguments[i].size();++j)cout<<this->arguments[i][j]<<", ";
-        cout<<endl; 
-    }*/ 
-    /*for(size_t j=0;j<this->arguments[argI].size();++j)cout<<this->arguments[argI][j]<<", "; 
-    cout<<endl; */ 
-
     Matrix<3,2,double> m10(this->arguments[argI++]); 
     Matrix<3,3,double> m11(this->arguments[argI++]); 
     Matrix<4,2,float> m12(this->arguments[argI++]); 
     Matrix<2,3,float> m13(this->arguments[argI++]); 
-
-
     Matrix<2,3,long> m14(this->arguments[argI++]); 
     Matrix<3,4,long> m15(this->arguments[argI++]); 
     
@@ -312,31 +284,6 @@ void UnitTest::runAllTests()
        Matrix<3,3,long> p15 = m15*(m15.createTranspose()); 
        results.push_back(p15==this->expected[index++]); 
     }
-    //Determines if it needs to compute strings for outputting or now 
-    if(this->talk)
-    {
-        this->evaluateResults(); 
-        cout<<this->toString(); 
-    }
-}
-
-//Appends string representation of test results to each part for user outputting 
-void UnitTest::evaluateResults() 
-{
-    string str = ""; 
-    for(size_t i=0;i<this->results.size();++i)
-    {
-        str = this->results[i] ? "True" : "False"; 
-        this->resultsString[i] = this->resultsString[i]+str+"\n"; 
-    }
-}
-
-//Turns wordvec into a single string to output
-string UnitTest::toString() const 
-{
-    string toReturn = ""; 
-    for(size_t i=0;i<this->resultsString.size();++i)toReturn = toReturn+this->resultsString[i];  
-    return toReturn; 
 }
 
 void UnitTest::outLog(std::ostream& out) const 
