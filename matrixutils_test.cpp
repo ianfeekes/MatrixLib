@@ -11,7 +11,14 @@ using namespace MATRIX; 					//We want to simulate a user with matrix functions
 /* Takes in command lines for specifying outputting results of each individual test. Initializes
  * unit tests and data vectors for arguments, expected, strings, and operations for each test. 
  * Specifically aims to test initialization and constructors, '==' operator, '*' operator, and 
- * the transpose methods.*/
+ * the transpose methods. A detailed log of each of the tests can be found at the end of this file
+ * 
+ * Note: This testing interface could be made more automated for ease in adding in more unit tests
+ * in addition to allowing random number generation to be passed into matrices with their expected
+ * values gathered. If the client were to continue development on this matrix library, the testing 
+ * interface could be streamlined and added to in order to more easily cover corner cases and more
+ * elegantly prove correctness. 
+ */
 int main(int argc, char* argv[]){
 	cout<<"Entering Matrix Client";
 	string commandArg = ""; 
@@ -591,3 +598,84 @@ int main(int argc, char* argv[]){
 	cout<<"Exiting Matrix Client"<<endl; 
 	return 0; 
 }
+
+/*
+	Single line description of tests: 
+
+	Test of 3x3 int matrix transposition with vector constructor 
+ 	Test of 2x2 int matrix transposition with double vector constructor 
+	Test of 2x10 float matrix transpose with double vector constructor 
+	Test of 3x3 int matrix transpose with double vector constructor 
+	Test of 4x1 int matrix transpose with vector constructor
+	Test of 5x2 int matrix tranpose with vector constructor
+	Test of 15x15 large double matrix transpose with vector constructor 
+	Test of single value double matrix transpose with vector constructor 
+	Test of 5x2 int matrix transposition with vector constructor      
+	Test of 3x3 int matrix with single value constructor transposeTo 
+	Test of 2x2 matrix with dif. type value constructor transposeTo 
+	Test of float matrix with dif. type value constructor transposeTo 
+	Test of int matrix with dif. type constructor transposeTo      
+	TranposeTo on non-square int matrix with single value constructor 
+	Attempt of casting diff value constructor to large double matrix transposeTo 
+	TransposeTo on single-value double matrix 
+	Casting double constructor on int matrix and transposeTo 
+	single value initializing 3x3 int matrix 
+	single value initializing 2x2 int matrix with double vector 
+	single value initializing 2x10 float matrix with double vector 
+	single value initializing 3x3 int matrix 
+	single value initializing 4x1 int matrix 
+	single value initializing 5x2 int matrix 
+	single value initializing 15x15 large double matrix 
+	single value initializing a single value double matrix 
+	single value initializing 5x2 int matrix 
+	Test of multiplying int matrix with negative scalar integer 
+	Test of multiplying int matrix with positive scalar integer 
+	Test of multiplying float matrix with zero scalar 
+	Test of multiplying int matrix with positive double
+	Test of multiplying int matrix with very large integer 
+	Test of multiplying large double matrix with reduced pi 
+	Test of multiplying int matrix with large integer 
+	Test of multiplying int matrix with negative integer 
+	Test of multiplying 3x3 int matrices with single value elements  
+	Test of multiplying 3x3 int matrices with various value elements 
+	Test of multiplying square int matrix with itself                 
+	Test of multiplying 5x2 matrix with a 2x2 matrix                   
+	Test of multiplying int matrix with a single-entry double matrix   
+	Test of multiplying non-square matrices after transposition         
+	Test of multiplying double and int matrices after transposition     
+	Test of multiplying 2x5 with 2x5 post transposition                 
+	Test above post transposition with matrices reversed              
+	Test of multiplying 3x3 with matrix transposed into a vector        
+	Test of multiplying 3x3 double with 3x2 double                       
+	Test of multiplying 2x3 double with 3x3 double                       
+	Test of multiplying 4x2 float with 2x3 float                       
+	Test of multiplying 2x3 long with 2x4 long     
+	Test of multiplying 3x3 int single element matrix with transpose 
+	Test of multiplying 3x3 int various element matrix with transpose 
+	Test of multiplying square int matrix with its tranpose 
+	Test of multiplying 5x2 matrix float matrix with its transpose 
+	Test of multiplying square int matrix with its transpose 
+	Test of multiplying 15x15 giant double matrix with transpose 
+	Test of multiplying single value double matrix with transpose
+	Test of multiplying 5x5 int matrix with transpose
+	Test of multiplying 3x3 double matrix with 3x3 double matrix 
+	Test of multiplying 3x3 double matrix with 3x3 double matrix 
+	Test of multiplying 4x2 float matrix with 2x4 float matrix 
+	Test of multiplying 2x3 float matrix with 3x2 float matrix 
+	Test of multiplying 2x3 long matrix with 3x2 long matrix 
+	Test of multiplying 3x4 long matrix with 4x3 long matrix    
+	Test of multiplying 3x3 int single element matrix with transpose 
+	Test of multiplying 3x3 int various element matrix with transpose 
+	Test of multiplying square int matrix with its tranpose 
+	Test of multiplying 5x2 matrix float matrix with its transpose 
+	Test of multiplying square int matrix with its transpose 
+	Test of multiplying 15x15 giant double matrix with transpose 
+	Test of multiplying single value double matrix with transpose 
+	Test of multiplying 5x5 int matrix with transpose
+	Test of multiplying 3x3 double matrix with 3x3 double matrix 
+	Test of multiplying 3x3 double matrix with 3x3 double matrix 
+	Test of multiplying 4x2 float matrix with 2x4 float matrix 
+	Test of multiplying 2x3 float matrix with 3x2 float matrix 
+	Test of multiplying 2x3 long matrix with 3x2 long matrix 
+	Test of multiplying 3x4 long matrix with 4x3 long matrix         
+	*/ 
